@@ -7,13 +7,21 @@ provider "aws" {
   secret_key = "${var.aws_secret_key}"
 }
 
-#Configure VPC
+#Configure a VPC
 
-resource "aws_vpc" "main" {
-  cidr_block = "10.0.0.0/16"
-  enable_dns_hostnames = "true"
+module "networking" {
+  source = "./modules/networking"
 
-  tags = {
-    Name = "WP"
-  }
-} 
+  vpc_name = "WP"
+  vpc_subnet = "${var.vpc_subnet}"
+  vpc_tenancy = "${var.vpc_tenancy}"
+
+  dmz_count = "${var.dmz_count}"
+  dmz_subnets = "${var.dmz_subnets}"
+
+  app_count = "${var.app_count}"
+  app_subnets = "${var.app_subnets}"
+
+  db_count = "${var.db_count}"
+  db_subnets = "${var.db_subnets}"
+}
