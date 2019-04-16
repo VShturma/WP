@@ -60,16 +60,16 @@ resource "aws_internet_gateway" "igw" {
 }
 
 # NAT Gateway
-resource "aws_eip" "nat" {}
+#resource "aws_eip" "nat" {}
 
-resource "aws_nat_gateway" "ngw" {
-	allocation_id = "${aws_eip.nat.id}"
-	subnet_id = "${aws_subnet.DMZ.0.id}"
-
-	tags = {
-		Name = "NGW"
-	}
-}
+#resource "aws_nat_gateway" "ngw" {
+#	allocation_id = "${aws_eip.nat.id}"
+#	subnet_id = "${aws_subnet.DMZ.0.id}"	#requires an improvment.
+#
+#	tags = {
+#		Name = "NGW"
+#	}
+#}
 
 # Routing for DMZ(public) subnets
 resource "aws_route_table" "public" {
@@ -95,10 +95,10 @@ resource "aws_route_table_association" "public" {
 resource "aws_route_table" "private" {
 	vpc_id = "${aws_vpc.main.id}"
 
-	route {
-		cidr_block = "0.0.0.0/0"
-		nat_gateway_id = "${aws_nat_gateway.ngw.id}"
-	}
+#	route {
+#		cidr_block = "0.0.0.0/0"
+#		nat_gateway_id = "${aws_nat_gateway.ngw.id}"
+#	}
 
 	tags = {
 		Name = "privateRT"
@@ -126,4 +126,183 @@ resource "aws_route_table_association" "isolated" {
 	route_table_id = "${aws_route_table.isolated.id}"
 }
 
+# Security Groups
+# Egress rules are configured separately in order to avoid https://github.com/terraform-providers/terraform-provider-aws/issues/6015
+# HTTP/HTTPS egress rules are configured for both bastion and web SGs in one block.
 
+## Bastion SG
+resource "aws_security_group" "bastion" {
+	name = "BastionSecurityGroup"
+	description = "Security group for Bastion instances"
+	vpc_id = "${aws_vpc.main.id}"
+
+	ingress {
+		from_port = 22
+		to_port = 22
+		protocol = "tcp"
+		cidr_blocks = "${var.ssh_access_ips}"
+	}
+
+	tags = {
+		Name = "BastionSecurityGroup"
+	}
+}
+
+resource "aws_security_group_rule" "allow_egress_ssh" {
+	type = "egress"
+	from_port = 22
+	to_port = 22
+	protocol = "tcp"
+	source_security_group_id = "${aws_security_group.web.id}"
+	security_group_id = "${aws_security_group.bastion.id}"
+}
+
+## ALB SG
+resource "aws_security_group" "alb" {
+	name = "PublicAlbSecurityGroup"
+	description = "Security group for ALB"
+	vpc_id = "${aws_vpc.main.id}"
+
+	ingress {
+		from_port = 80
+		to_port = 80
+		protocol = "tcp"
+		cidr_blocks = "${var.web_access_ips}"
+	}
+
+	ingress {
+		from_port = 443
+		to_port = 443
+		protocol = "tcp"
+		cidr_blocks = "${var.web_access_ips}"
+	}
+
+	tags = {
+		Name = "PublicAlbSecurityGroup"
+	}
+}
+
+resource "aws_security_group_rule" "allow_egress_http_web" {
+	type = "egress"
+	from_port = 80
+	to_port = 80
+	protocol = "tcp"
+	source_security_group_id = "${aws_security_group.web.id}"
+	security_group_id = "${aws_security_group.alb.id}"
+}
+
+resource "aws_security_group_rule" "allow_egress_https_web" {
+	type = "egress"
+	from_port = 443
+	to_port = 443
+	protocol = "tcp"
+	source_security_group_id = "${aws_security_group.web.id}"
+	security_group_id = "${aws_security_group.alb.id}"
+}
+
+## WEB SG
+resource "aws_security_group" "web" {
+	name = "WebSecurityGroup"
+	description = "Security group for web instances"
+	vpc_id = "${aws_vpc.main.id}"
+
+	ingress {
+		from_port = 80
+		to_port = 80
+		protocol = "tcp"
+		security_groups = ["${aws_security_group.alb.id}"]
+	}
+
+	ingress {
+		from_port = 443
+		to_port = 443
+		protocol = "tcp"
+		security_groups = ["${aws_security_group.alb.id}"]
+	}
+
+	ingress {
+		from_port = 22
+		to_port = 22
+		protocol = "tcp"
+		security_groups = ["${aws_security_group.bastion.id}"]
+	}
+
+	tags {
+		Name = "WebSecurityGroup"
+	}
+}
+
+resource "aws_security_group_rule" "allow_egress_http_all" {
+	type = "egress"
+	from_port = 80
+	to_port = 80
+	protocol = "tcp"
+	cidr_blocks = ["0.0.0.0/0"]
+	security_group_id = "${aws_security_group.bastion.id}" 
+	security_group_id = "${aws_security_group.web.id}"
+}
+
+resource "aws_security_group_rule" "allow_egress_https_all" {
+	type = "egress"
+	from_port = 443
+	to_port = 443
+	protocol = "tcp"
+	cidr_blocks = ["0.0.0.0/0"]
+	security_group_id = "${aws_security_group.bastion.id}"
+	security_group_id = "${aws_security_group.web.id}"
+}
+
+resource "aws_security_group_rule" "allow_egress_efs" {
+	type = "egress"
+	from_port = 2049
+	to_port = 2049
+	protocol = "tcp"
+	source_security_group_id = "${aws_security_group.efs.id}"
+	security_group_id = "${aws_security_group.web.id}"
+}
+
+resource "aws_security_group_rule" "allow_egress_db" {
+	type = "egress"
+	from_port = 3306
+	to_port = 3306
+	protocol = "tcp"
+	source_security_group_id = "${aws_security_group.db.id}"
+	security_group_id = "${aws_security_group.web.id}"
+}
+
+
+##DB SG
+resource "aws_security_group" "db" {
+	name = "DatabaseSecurityGroup"
+	description = "Security group for Amazon RDS cluster"
+	vpc_id = "${aws_vpc.main.id}"
+
+	ingress {
+		from_port = 3306
+		to_port = 3306
+		protocol = "tcp"
+		security_groups = ["${aws_security_group.web.id}"]
+	}
+
+	tags = {
+		Name = "DatabaseSecurityGroup"
+	}
+}
+
+## EFS SG
+resource "aws_security_group" "efs" {
+	name = "EfsSecurityGroup"
+	description = "Security group for EFS mount targets"
+	vpc_id = "${aws_vpc.main.id}"
+
+	ingress {
+		from_port = 2049
+		to_port = 2049
+		protocol = "tcp"
+		security_groups = ["${aws_security_group.web.id}"]
+	}
+
+	tags {
+		Name = "EfsSecurityGroup"
+	}
+}

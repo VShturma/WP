@@ -38,3 +38,13 @@ variable "db_subnets" {
 	description = "List of CIDR blocks for DB(isolated) subnets."
 	type = "list"
 }
+
+variable "ssh_access_ips" {
+	description = "List of IPs that can SSH to a Bastion host."
+	type = "list"
+}
+
+variable "web_access_ips" {
+	description = "List of IPs that can acess web resources via HTTP/HTTPS."
+	type = "list"
+}

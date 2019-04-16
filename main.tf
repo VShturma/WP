@@ -24,4 +24,7 @@ module "networking" {
 
   db_count = "${var.db_count}"
   db_subnets = "${var.db_subnets}"
+
+  ssh_access_ips = "${var.ssh_access_ips}"
+  web_access_ips = "${var.web_access_ips}"
 }

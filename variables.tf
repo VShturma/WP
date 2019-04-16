@@ -45,3 +45,16 @@ variable "db_subnets" {
   type = "list"
   default = ["10.0.21.0/24", "10.0.22.0/24"]
 }
+
+variable "ssh_access_ips" {
+  description = "List of IPs that can SSH to a Bastion host."
+  type = "list"
+  default = ["77.88.248.9/32", "93.77.157.24/32"]
+}
+
+variable "web_access_ips" {
+  description = "List of IPs that can acess web resources via HTTP/HTTPS."
+  type = "list"
+  default = ["77.88.248.9/32", "93.77.157.24/32", "83.170.70.4/32"]
+}
+
