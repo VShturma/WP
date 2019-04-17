@@ -306,3 +306,216 @@ resource "aws_security_group" "efs" {
 		Name = "EfsSecurityGroup"
 	}
 }
+
+# Network ACLs
+## DMZ NACL
+resource "aws_network_acl" "dmz" {
+	vpc_id = "${aws_vpc.main.id}"
+	subnet_ids = ["${aws_subnet.DMZ.*.id}"]
+
+	ingress {
+		from_port = 80
+		to_port = 80
+		rule_no = 100
+		action = "allow"
+		protocol = "tcp"
+		cidr_block = "0.0.0.0/0"
+	}
+
+	ingress {
+		from_port = 443
+		to_port = 443
+		rule_no = 110
+		action = "allow"
+		protocol = "tcp"
+		cidr_block = "0.0.0.0/0"
+	}
+
+	ingress {
+		from_port = 1024
+		to_port = 65535
+		rule_no = 120
+		action = "allow"
+		protocol = "tcp"
+		cidr_block = "0.0.0.0/0"
+	}
+
+	egress {
+		from_port = 22
+		to_port = 22
+		rule_no = 100
+		action = "allow"
+		protocol = "tcp"
+		cidr_block = "${var.vpc_subnet}"
+	}
+
+	egress {
+		from_port = 80
+		to_port = 80
+		rule_no = 110
+		action = "allow"
+		protocol = "tcp"
+		cidr_block = "0.0.0.0/0"
+	}
+
+	egress {
+		from_port = 443
+		to_port = 443
+		rule_no = 120
+		action = "allow"
+		protocol = "tcp"
+		cidr_block = "0.0.0.0/0"
+	}
+
+	egress {
+		from_port = 32768
+		to_port = 65535
+		rule_no = 130
+		action = "allow"
+		protocol = "tcp"
+		cidr_block = "0.0.0.0/0"
+	}
+
+	tags {
+		Name = "DMZ"
+	}
+}
+
+resource "aws_network_acl_rule" "naclr_dmz_ssh_allow" {
+		count = "${length(var.ssh_access_ips)}"
+		network_acl_id = "${aws_network_acl.dmz.id}"
+		rule_number = "${50 + count.index}"
+		protocol = "tcp"
+		rule_action = "allow"
+		cidr_block = "${var.ssh_access_ips[count.index]}"
+		from_port = 22
+		to_port = 22
+}
+
+## APP NACL
+resource "aws_network_acl" "app" {
+	vpc_id = "${aws_vpc.main.id}"
+	subnet_ids = ["${aws_subnet.APP.*.id}"]
+
+	ingress {
+		from_port = 80
+		to_port = 80
+		rule_no = 100
+		action = "allow"
+		protocol = "tcp"
+		cidr_block = "${var.vpc_subnet}"
+	}
+
+	ingress {
+		from_port = 443
+		to_port = 443
+		rule_no = 110
+		action = "allow"
+		protocol = "tcp"
+		cidr_block = "${var.vpc_subnet}"
+	}
+
+	ingress {
+		from_port = 22
+		to_port = 22
+		rule_no = 120
+		action = "allow"
+		protocol = "tcp"
+		cidr_block = "${var.vpc_subnet}"
+	}
+
+	ingress {
+		from_port = 1024
+		to_port = 65535
+		rule_no = 130
+		action = "allow"
+		protocol = "tcp"
+		cidr_block = "0.0.0.0/0"
+	}
+
+	egress {
+		from_port = 80
+		to_port = 80
+		rule_no = 100
+		action = "allow"
+		protocol = "tcp"
+		cidr_block = "0.0.0.0/0"
+	}
+
+	egress {
+		from_port = 443
+		to_port = 443
+		rule_no = 110
+		action = "allow"
+		protocol = "tcp"
+		cidr_block = "0.0.0.0/0"
+	}
+
+	egress {
+		from_port = 3306
+		to_port = 3306
+		rule_no = 120
+		action = "allow"
+		protocol = "tcp"
+		cidr_block = "${var.vpc_subnet}"
+	}
+
+	egress {
+		from_port = 2049
+		to_port = 2049
+		rule_no = 130
+		action = "allow"
+		protocol = "tcp"
+		cidr_block = "${var.vpc_subnet}"
+	}
+
+	egress {
+		from_port = 1024
+		to_port = 65535
+		rule_no = 140
+		action = "allow"
+		protocol = "tcp"
+		cidr_block = "0.0.0.0/0"
+	}
+
+	tags {
+		Name = "APP"
+	}
+}
+
+## DB NACL
+resource "aws_network_acl" "db" {
+	vpc_id = "${aws_vpc.main.id}"
+	subnet_ids = ["${aws_subnet.DB.*.id}"]
+
+	ingress {
+		from_port = 3306
+		to_port = 3306
+		rule_no = 100
+		action = "allow"
+		protocol = "tcp"
+		cidr_block = "${var.vpc_subnet}"
+	}
+
+	ingress {
+		from_port = 2049
+		to_port = 2049
+		rule_no = 110
+		action = "allow"
+		protocol = "tcp"
+		cidr_block = "${var.vpc_subnet}"
+	}
+
+	egress {
+		from_port = 1024
+		to_port = 65535
+		rule_no = 100
+		action = "allow"
+		protocol = "tcp"
+		cidr_block = "${var.vpc_subnet}"
+	}
+
+	tags {
+		Name = "DB"
+	}
+}
