@@ -2,7 +2,7 @@
 
 # Configure the AWS Provider
 provider "aws" {
-  region = "eu-central-1"
+  region = "${var.aws_region}"
   access_key = "${var.aws_access_key}"
   secret_key = "${var.aws_secret_key}"
 }
@@ -12,7 +12,7 @@ provider "aws" {
 module "networking" {
   source = "./modules/networking"
 
-  vpc_name = "WP"
+  vpc_name = "${var.vpc_name}"
   vpc_subnet = "${var.vpc_subnet}"
   vpc_tenancy = "${var.vpc_tenancy}"
 
@@ -22,8 +22,8 @@ module "networking" {
   app_count = "${var.app_count}"
   app_subnets = "${var.app_subnets}"
 
-  db_count = "${var.db_count}"
-  db_subnets = "${var.db_subnets}"
+  data_count = "${var.data_count}"
+  data_subnets = "${var.data_subnets}"
 
   ssh_access_ips = "${var.ssh_access_ips}"
   web_access_ips = "${var.web_access_ips}"

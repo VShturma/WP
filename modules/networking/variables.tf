@@ -20,7 +20,7 @@ variable "app_count" {
 	description = "Number of APP subnets."
 }
 
-variable "db_count" {
+variable "data_count" {
 	description = "Number of DB subnets."
 }
 
@@ -34,7 +34,7 @@ variable "app_subnets" {
 	type = "list"
 }
 
-variable "db_subnets" {
+variable "data_subnets" {
 	description = "List of CIDR blocks for DB(isolated) subnets."
 	type = "list"
 }

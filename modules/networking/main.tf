@@ -14,7 +14,7 @@ resource "aws_vpc" "main" {
 data "aws_availability_zones" "available" {}
 
 # DMZ(public) subnets
-resource "aws_subnet" "DMZ" {
+resource "aws_subnet" "dmz" {
 	count = "${var.dmz_count}"
 	vpc_id = "${aws_vpc.main.id}"
 	cidr_block = "${var.dmz_subnets.[count.index]}"
@@ -27,7 +27,7 @@ resource "aws_subnet" "DMZ" {
 }
 
 # APP(private) subnets
-resource "aws_subnet" "APP" {
+resource "aws_subnet" "app" {
 	count = "${var.app_count}"
 	vpc_id = "${aws_vpc.main.id}"
 	cidr_block = "${var.app_subnets.[count.index]}"
@@ -38,15 +38,15 @@ resource "aws_subnet" "APP" {
 	}
 }
 
-# DB(isolated) subnets
-resource "aws_subnet" "DB" {
-	count = "${var.db_count}"
+# Data(isolated) subnets
+resource "aws_subnet" "data" {
+	count = "${var.data_count}"
 	vpc_id = "${aws_vpc.main.id}"
-	cidr_block = "${var.db_subnets.[count.index]}"
+	cidr_block = "${var.data_subnets.[count.index]}"
 	availability_zone = "${data.aws_availability_zones.available.names[count.index]}"
 
 	tags = {
-		Name = "DBisolated${count.index + 1}"
+		Name = "DATAisolated${count.index + 1}"
 	}
 }
 
@@ -64,7 +64,7 @@ resource "aws_internet_gateway" "igw" {
 
 #resource "aws_nat_gateway" "ngw" {
 #	allocation_id = "${aws_eip.nat.id}"
-#	subnet_id = "${aws_subnet.DMZ.0.id}"	#requires an improvment.
+#	subnet_id = "${aws_subnet.dmz.0.id}"	#requires an improvment.
 #
 #	tags = {
 #		Name = "NGW"
@@ -86,8 +86,8 @@ resource "aws_route_table" "public" {
 }
 
 resource "aws_route_table_association" "public" {
-	count = "${aws_subnet.DMZ.count}"
-	subnet_id = "${aws_subnet.DMZ.*.id[count.index]}"
+	count = "${aws_subnet.dmz.count}"
+	subnet_id = "${aws_subnet.dmz.*.id[count.index]}"
 	route_table_id = "${aws_route_table.public.id}"
 }
 
@@ -106,8 +106,8 @@ resource "aws_route_table" "private" {
 }
 
 resource "aws_route_table_association" "private" {
-	count = "${aws_subnet.APP.count}"
-	subnet_id = "${aws_subnet.APP.*.id[count.index]}"
+	count = "${aws_subnet.app.count}"
+	subnet_id = "${aws_subnet.app.*.id[count.index]}"
 	route_table_id = "${aws_route_table.private.id}"
 }
 
@@ -121,8 +121,8 @@ resource "aws_route_table" "isolated" {
 }
 
 resource "aws_route_table_association" "isolated" {
-	count = "${aws_subnet.DB.count}"
-	subnet_id = "${aws_subnet.DB.*.id[count.index]}"
+	count = "${aws_subnet.data.count}"
+	subnet_id = "${aws_subnet.data.*.id[count.index]}"
 	route_table_id = "${aws_route_table.isolated.id}"
 }
 
@@ -311,7 +311,7 @@ resource "aws_security_group" "efs" {
 ## DMZ NACL
 resource "aws_network_acl" "dmz" {
 	vpc_id = "${aws_vpc.main.id}"
-	subnet_ids = ["${aws_subnet.DMZ.*.id}"]
+	subnet_ids = ["${aws_subnet.dmz.*.id}"]
 
 	ingress {
 		from_port = 80
@@ -387,7 +387,7 @@ resource "aws_network_acl_rule" "naclr_dmz_ssh_allow" {
 		rule_number = "${50 + count.index}"
 		protocol = "tcp"
 		rule_action = "allow"
-		cidr_block = "${var.ssh_access_ips[count.index]}"
+		cidr_block = "${element(var.ssh_access_ips, count.index)}"
 		from_port = 22
 		to_port = 22
 }
@@ -395,7 +395,7 @@ resource "aws_network_acl_rule" "naclr_dmz_ssh_allow" {
 ## APP NACL
 resource "aws_network_acl" "app" {
 	vpc_id = "${aws_vpc.main.id}"
-	subnet_ids = ["${aws_subnet.APP.*.id}"]
+	subnet_ids = ["${aws_subnet.app.*.id}"]
 
 	ingress {
 		from_port = 80
@@ -486,7 +486,7 @@ resource "aws_network_acl" "app" {
 ## DB NACL
 resource "aws_network_acl" "db" {
 	vpc_id = "${aws_vpc.main.id}"
-	subnet_ids = ["${aws_subnet.DB.*.id}"]
+	subnet_ids = ["${aws_subnet.data.*.id}"]
 
 	ingress {
 		from_port = 3306
