@@ -14,6 +14,7 @@ variable "vpc_name" {
 
 variable "vpc_subnet" {
 	description = "CIDR block for a new VPC."
+  default = "10.0.0.0/16"
 }
 
 variable "vpc_tenancy" {
@@ -39,16 +40,19 @@ variable "data_count" {
 variable "dmz_subnets" {
   description = "List of CIDR blocks for DMZ(public) subnets."
   type = "list"
+  default = ["10.0.1.0/24", "10.0.2.0/24"]
 }
 
 variable "app_subnets" {
   description = "List of CIDR blocks for APP(private) subnets."
   type = "list"
+  default = ["10.0.11.0/24", "10.0.12.0/24"]
 }
 
 variable "data_subnets" {
   description = "List of CIDR blocks for Data(isolated) subnets."
   type = "list"
+  default = ["10.0.21.0/24", "10.0.22.0/24"]
 }
 
 variable "ssh_access_ips" {
@@ -59,5 +63,6 @@ variable "ssh_access_ips" {
 variable "web_access_ips" {
   description = "List of IPs that can acess web resources via HTTP/HTTPS."
   type = "list"
+  default = ["0.0.0.0/0"]
 }
 
