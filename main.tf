@@ -28,3 +28,15 @@ module "networking" {
   ssh_access_ips = "${var.ssh_access_ips}"
   web_access_ips = "${var.web_access_ips}"
 }
+
+module "database" {
+  source = "./modules/database"
+
+  db_subnets = ["${module.networking.data_subnets}"]
+  db_name = "${var.db_name}"
+  db_username = "${var.db_username}"
+  db_password = "${var.db_password}"
+  db_instance_class = "${var.db_instance_class}"
+  db_size = "${var.db_size}"
+  db_sgs = ["${module.networking.db_sgs}"]
+}

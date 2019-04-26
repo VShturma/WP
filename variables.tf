@@ -66,3 +66,27 @@ variable "web_access_ips" {
   default = ["0.0.0.0/0"]
 }
 
+variable "db_name" {
+  description = "Database Name"
+  default = "wordpress"
+}
+
+variable "db_username" {
+  description = "Database Master Username"
+}
+
+variable "db_password" {
+  description = "Database Master Password"
+}
+
+variable "db_instance_class" {
+  description = "Database Instance Class Type"
+  default = "db.t2.micro"
+}
+
+variable "db_size" {
+  description = "Database Size"
+  default = 20
+}
+
+

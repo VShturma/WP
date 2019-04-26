@@ -1,5 +1,9 @@
 #-----/networking/outputs.tf-----
 
-output "vpc_id" {
-  value = "${aws_vpc.main.id}"
+output "data_subnets" {
+	value = "${aws_subnet.data.*.id}"
+}
+
+output "db_sgs" {
+	value = "${aws_security_group.db.id}"
 }
