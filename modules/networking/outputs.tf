@@ -11,4 +11,3 @@ output "db_sg" {
 output "efs_sgs" {
   value = ["${aws_security_group.efs.id}"]
 }
-
