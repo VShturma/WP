@@ -40,3 +40,4 @@ module "database" {
   db_size = "${var.db_size}"
   db_sgs = ["${module.networking.db_sgs}"]
 }
+
