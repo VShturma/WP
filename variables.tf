@@ -89,4 +89,7 @@ variable "db_size" {
   default = 20
 }
 
-
+variable "efs_performance" { 
+  description = "The EFS filesystem performance mode. Can be generalPurpose or maxIO"
+  default = "generalPurpose"
+}

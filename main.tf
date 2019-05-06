@@ -40,3 +40,9 @@ module "database" {
   db_size = "${var.db_size}"
   db_sgs = ["${module.networking.db_sg}"]
 }
+
+module "efs" {
+  source = "./modules/efs"
+  efs_performance = "${var.efs_performance}"
+  efs_subnets = ["${module.networking.data_subnets}"]
+}
