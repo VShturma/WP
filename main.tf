@@ -38,5 +38,5 @@ module "database" {
   db_password = "${var.db_password}"
   db_instance_class = "${var.db_instance_class}"
   db_size = "${var.db_size}"
-  db_sgs = ["${module.networking.db_sgs}"]
+  db_sgs = ["${module.networking.db_sg}"]
 }

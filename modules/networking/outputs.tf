@@ -4,7 +4,7 @@ output "data_subnets" {
   value = ["${aws_subnet.data.*.id}"]
 }
 
-output "db_sgs" {
+output "db_sg" {
   value = "${aws_security_group.db.id}"
 }
 
