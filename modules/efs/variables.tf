@@ -8,3 +8,8 @@ variable "efs_subnets" {
   description = "List of data subnets"
   type = "list"
 }
+
+variable "efs_sgs" {
+  description = "The list of SGs for a EFS volume"
+  type = "list"
+}

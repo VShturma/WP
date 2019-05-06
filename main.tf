@@ -45,4 +45,5 @@ module "efs" {
   source = "./modules/efs"
   efs_performance = "${var.efs_performance}"
   efs_subnets = ["${module.networking.data_subnets}"]
+  efs_sgs = "${module.networking.efs_sgs}"
 }

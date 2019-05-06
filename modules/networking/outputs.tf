@@ -8,7 +8,7 @@ output "db_sg" {
   value = "${aws_security_group.db.id}"
 }
 
-output "efs_sg" {
-  value = "${aws_security_group.efs.id}"
+output "efs_sgs" {
+  value = ["${aws_security_group.efs.id}"]
 }
 
