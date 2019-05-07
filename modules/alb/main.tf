@@ -24,7 +24,7 @@ resource "aws_lb_target_group" "alb_tg_public" {
     matcher = "200"
   }
 
-  tags = {
+  tags {
     Name = "PublicAlbTargetGroup"
   }
 }
