@@ -14,7 +14,7 @@ resource "aws_lb" "alb_wp" {
 }
 
 resource "aws_lb_target_group" "alb_tg_public" {
-  name = "PublicAlbTargetGroup"
+  name = "PublicAlbTG"
   port = 80
   protocol = "HTTP"
   vpc_id = "${var.vpc_id}"
@@ -25,7 +25,7 @@ resource "aws_lb_target_group" "alb_tg_public" {
   }
 
   tags {
-    Name = "PublicAlbTargetGroup"
+    Name = "PublicAlbTG"
   }
 }
 
