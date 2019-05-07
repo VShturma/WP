@@ -9,3 +9,7 @@ variable "alb_subnets" {
   description = "A list of subnet IDs to attach to the ALB"
   type = "list"
 }
+
+variable "vpc_id" {
+  description = "The identifier of the VPC in which to create the target group"
+}
