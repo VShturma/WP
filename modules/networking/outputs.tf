@@ -1,5 +1,9 @@
 #-----/networking/outputs.tf-----
 
+output "vpc" {
+  value = "${aws_vpc.main.id}"
+}
+
 output "dmz_subnets" {
   value = ["${aws_subnet.dmz.*.id}"]
 }
