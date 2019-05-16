@@ -1,2 +1,3 @@
 .terraform/
 terraform.*
+bastion_user_data.tpl
