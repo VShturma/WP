@@ -93,3 +93,7 @@ variable "efs_performance" {
   description = "The EFS filesystem performance mode. Can be generalPurpose or maxIO"
   default = "generalPurpose"
 }
+
+variable "ec2_key_path" {
+  description = "EC2 Key Pair path"
+}
