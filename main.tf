@@ -62,11 +62,21 @@ data "template_file" "bastion_template" {
   template = "${file("bastion_user_data.tpl")}"
 }
 
+data "template_file" "web_template" {
+  template = "${file("web_user_data.tpl")}"
+}
+
 module "compute" {
   source = "./modules/compute"
 
+  ec2_key_path = "${var.ec2_key_path}"
+
   bastion_sgs = ["${module.networking.bastion_sg}"]
-  ec2_key_path = "${var.ec2_key_path}" 
   bastion_user_data = "${data.template_file.bastion_template.rendered}"
   bastion_asg_subnets = ["${module.networking.dmz_subnets}"]
+
+  web_sgs = ["${module.networking.web_sg}"]
+  web_user_data = "${data.template_file.web_template.rendered}"
+  web_asg_subnets = ["${module.networking.app_subnets}"]
+  alb_tgs = [${module.networking.alb_tg}]
 }

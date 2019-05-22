@@ -5,6 +5,11 @@ data "aws_ami" "amzn_linux2" {
   most_recent = true
   
   filter {
+    name = "name"
+    values = ["amzn2-ami-hvm-2.0.????????-x86_64-gp2"]
+  }
+
+  filter {
     name = "root-device-type"
     values = ["ebs"]
   }
@@ -46,3 +51,33 @@ resource "aws_autoscaling_group" "bastion_asg" {
   health_check_type = "EC2"
   vpc_zone_identifier = ["${var.bastion_asg_subnets}"]
 }
+
+resource "aws_launch_configuration" "web_lc" {
+  name = "web_lc"
+  image_id = "${data.aws_ami.amzn_linux2.id}"
+  instance_type = "t2.micro"
+  key_name = "${aws_key_pair.ec2_key_pair.key_name}"
+  security_groups = ["${var.web_sgs}"]
+  associate_public_ip_address = true
+  user_data = "${var.web_user_data}"
+  enable_monitoring = false
+  ebs_optimized = false
+  
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+}
+
+resource "aws_autoscaling_group" "web_asg" {
+  name = "web_asg"
+  launch_configuration = "${aws_launch_configuration.web_lc.name}"
+  min_size = 0
+  max_size = 2
+  desired_capacity = 1
+  health_check_type = "EC2"
+  vpc_zone_identifier = ["${var.web_asg_subnets}"]
+  target_group_arns = ["${var.alb_tgs}"]
+}
+
