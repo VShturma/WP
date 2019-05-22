@@ -78,5 +78,5 @@ module "compute" {
   web_sgs = ["${module.networking.web_sg}"]
   web_user_data = "${data.template_file.web_template.rendered}"
   web_asg_subnets = ["${module.networking.app_subnets}"]
-  alb_tgs = [${module.networking.alb_tg}]
+  alb_tgs = ["${module.alb.alb_tg}"]
 }
