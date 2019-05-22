@@ -68,4 +68,5 @@ module "compute" {
   bastion_sgs = ["${module.networking.bastion_sg}"]
   ec2_key_path = "${var.ec2_key_path}" 
   bastion_user_data = "${data.template_file.bastion_template.rendered}"
+  bastion_asg_subnets = ["${module.networking.dmz_subnets}"]
 }
