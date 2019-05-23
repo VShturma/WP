@@ -86,8 +86,9 @@ module "compute" {
 }
 
 module "dns" {
-  source = "./module/dns"
+  source = "./modules/dns"
 
-  fs_endpoint = "${module.efs.mount_target_dns_name}"
+  vpc_id = "${module.networking.vpc}"
+  fs_endpoint = "${module.efs.efs_dns_name}"
   db_endpoint = "${module.database.rds_instance_hostname}"
 }
