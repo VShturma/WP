@@ -77,7 +77,7 @@ module "compute" {
   bastion_instance_type = "${var.bastion_instance_type}"
 
   web_instances_min = "${var.web_instances_min}"
-  web_instances_max = "{var.web_instances_max}"
+  web_instances_max = "${var.web_instances_max}"
   web_sgs = ["${module.networking.web_sg}"]
   web_user_data = "${data.template_file.web_template.rendered}"
   web_asg_subnets = ["${module.networking.app_subnets}"]
