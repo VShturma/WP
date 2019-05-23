@@ -9,6 +9,10 @@ variable "bastion_sgs" {
   type = "list"
 }
 
+variable "bastion_instance_type" {
+  description = "Bastion Instance Type"
+}
+
 variable "bastion_user_data" {
   description = "User data for a Bastion host"
 }
@@ -16,6 +20,10 @@ variable "bastion_user_data" {
 variable "bastion_asg_subnets" {
   description = "List of subnets to assign to the Bastion AutoScaling Group"
   type = "list"
+}
+
+variable "web_instance_type" {
+  description = "Web Instance Type"
 }
 
 variable "web_sgs" {

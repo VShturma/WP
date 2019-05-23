@@ -97,3 +97,13 @@ variable "efs_performance" {
 variable "ec2_key_path" {
   description = "EC2 Key Pair path"
 }
+
+variable "bastion_instance_type" {
+  description = "Bastion Instance Type"
+  default = "t2.micro"
+}
+
+variable "web_instance_type" {
+  description = "Web Instance Type"
+  default = "t2.micro"
+}

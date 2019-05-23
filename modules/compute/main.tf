@@ -28,7 +28,7 @@ resource "aws_key_pair" "ec2_key_pair" {
 resource "aws_launch_configuration" "bastion_lc" {
   name = "bastion_lc"
   image_id = "${data.aws_ami.amzn_linux2.id}"
-  instance_type = "t2.micro"
+  instance_type = "${var.bastion_instance_type}"
   key_name = "${aws_key_pair.ec2_key_pair.key_name}"
   security_groups = ["${var.bastion_sgs}"]
   associate_public_ip_address = true
@@ -55,7 +55,7 @@ resource "aws_autoscaling_group" "bastion_asg" {
 resource "aws_launch_configuration" "web_lc" {
   name = "web_lc"
   image_id = "${data.aws_ami.amzn_linux2.id}"
-  instance_type = "t2.micro"
+  instance_type = "${var.web_instance_type}"
   key_name = "${aws_key_pair.ec2_key_pair.key_name}"
   security_groups = ["${var.web_sgs}"]
   associate_public_ip_address = true
