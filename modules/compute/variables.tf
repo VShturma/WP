@@ -35,6 +35,14 @@ variable "web_user_data" {
   description = "User data for a Web instance"
 }
 
+variable "web_instances_min" {
+  description = "The minimum (and desired) number of instances in the web tier auto scaling group"
+}
+
+variable "web_instances_max" {
+  description = "The maximum number of instances in the web tier auto scaling group"
+}
+
 variable "web_asg_subnets" {
   description = "List of subnets to assign to the Web AutoScaling Group"
   type = "list"

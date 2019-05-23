@@ -107,3 +107,14 @@ variable "web_instance_type" {
   description = "Web Instance Type"
   default = "t2.micro"
 }
+
+variable "web_instances_min" { 
+  description = "The minimum (and desired) number of instances in the web tier auto scaling group"
+  default = 1
+}
+
+variable "web_instances_max" { 
+  description = "The maximum number of instances in the web tier auto scaling group"
+  default = 2
+}
+

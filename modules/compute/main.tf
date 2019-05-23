@@ -73,9 +73,9 @@ resource "aws_launch_configuration" "web_lc" {
 resource "aws_autoscaling_group" "web_asg" {
   name = "web_asg"
   launch_configuration = "${aws_launch_configuration.web_lc.name}"
-  min_size = 0
-  max_size = 2
-  desired_capacity = 1
+  min_size = "${var.web_instances_min}"
+  max_size = "${var.web_instances_max}"
+  desired_capacity = "${var.web_instances_min}"
   health_check_type = "EC2"
   vpc_zone_identifier = ["${var.web_asg_subnets}"]
   target_group_arns = ["${var.alb_tgs}"]
