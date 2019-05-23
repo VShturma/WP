@@ -84,3 +84,10 @@ module "compute" {
   web_instance_type = "${var.web_instance_type}"
   alb_tgs = ["${module.alb.alb_tg}"]
 }
+
+module "dns" {
+  source = "./module/dns"
+
+  fs_endpoint = "${module.efs.mount_target_dns_name}"
+  db_endpoint = "${module.database.rds_instance_hostname}"
+}
