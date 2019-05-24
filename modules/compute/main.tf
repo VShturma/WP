@@ -52,6 +52,15 @@ resource "aws_autoscaling_group" "bastion_asg" {
   vpc_zone_identifier = ["${var.bastion_asg_subnets}"]
 }
 
+resource "null_resource" "delay" {
+  provisioner "local-exec" {
+    command = "sleep 180"
+  }
+  triggers = {
+    "before" = "${aws_autoscaling_group.bastion_asg.id}"
+  }
+}
+
 resource "aws_launch_configuration" "web_lc" {
   name = "web_lc"
   image_id = "${data.aws_ami.amzn_linux2.id}"
@@ -71,6 +80,7 @@ resource "aws_launch_configuration" "web_lc" {
 }
 
 resource "aws_autoscaling_group" "web_asg" {
+  depends_on = ["null_resource.delay"]
   name = "web_asg"
   launch_configuration = "${aws_launch_configuration.web_lc.name}"
   min_size = "${var.web_instances_min}"
