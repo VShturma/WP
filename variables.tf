@@ -118,3 +118,24 @@ variable "web_instances_max" {
   default = 2
 }
 
+variable "wp_path" {
+  description = "Wordpress Site Directory"
+  default = "/var/www/html"
+}
+
+variable "wp_title" {
+  description = "WordPress Title"
+  default = "WordPress Test Page"
+}
+
+variable "wp_admin_username" {
+  description = "WordPress Administrator Username"
+}
+
+variable "wp_admin_email" {
+  description = "WordPress Administrator Username Email"
+}
+
+variable "wp_admin_password" {
+  description = "WordPress Administrator Username Password"
+}
