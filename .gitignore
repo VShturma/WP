@@ -1,3 +1,3 @@
 .terraform/
 terraform.*
-*_user_data.tpl
+test_user_data.tpl
