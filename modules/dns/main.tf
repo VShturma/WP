@@ -1,5 +1,16 @@
 #-----modules/dns/main.tf-----
 
+resource "aws_route53_zone" "public" {
+  name = "${var.public_domain_name}"
+  comment = "Public hosted zone for a WordPress environment"
+}
+
+resource "aws_route53_record" "www" {
+  zone_id = "${aws_route53_zone.public.zone_id}"
+  name = "${var.public_domain_name}"
+  type = "A"
+}
+
 resource "aws_route53_zone" "private" {
   name = "wp.local"
   comment = "Private hosted zone for a WordPress environment"

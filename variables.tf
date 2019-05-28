@@ -118,6 +118,10 @@ variable "web_instances_max" {
   default = 2
 }
 
+variable "public_domain_name" { 
+  description = "Domain Name for the public hosted zone"
+}
+
 variable "wp_path" {
   description = "Wordpress Site Directory"
   default = "/var/www/html"

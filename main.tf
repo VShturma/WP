@@ -101,6 +101,8 @@ module "compute" {
 module "dns" {
   source = "./modules/dns"
 
+  public_domain_name = "${var.public_domain_name}"
+
   vpc_id = "${module.networking.vpc}"
   fs_endpoint = "${module.efs.efs_dns_name}"
   db_endpoint = "${module.database.rds_instance_hostname}"
