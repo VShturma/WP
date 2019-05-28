@@ -102,7 +102,8 @@ module "dns" {
   source = "./modules/dns"
 
   public_domain_name = "${var.public_domain_name}"
-
+  alb_dns_name = "${module.alb.alb_dns_name}" 
+  alb_zone_id = "${module.alb.alb_zone_id}"
   vpc_id = "${module.networking.vpc}"
   fs_endpoint = "${module.efs.efs_dns_name}"
   db_endpoint = "${module.database.rds_instance_hostname}"

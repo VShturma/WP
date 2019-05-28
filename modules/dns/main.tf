@@ -9,6 +9,11 @@ resource "aws_route53_record" "www" {
   zone_id = "${aws_route53_zone.public.zone_id}"
   name = "${var.public_domain_name}"
   type = "A"
+
+  alias {
+    name = "${var.alb_dns_name}"
+    zone_id = "${var.alb_zone_id}"
+  }
 }
 
 resource "aws_route53_zone" "private" {
