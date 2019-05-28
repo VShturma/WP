@@ -66,6 +66,7 @@ data "template_file" "web_template" {
   template = "${file("web_user_data.tpl")}"
 
   vars {
+    fs_path = "${module.dns.fs_fqdn}"
     mysql_host = "${module.dns.db_fqdn}"
     mysql_root_password = "${var.db_password}"
     wp_db_username = "${var.db_username}"
