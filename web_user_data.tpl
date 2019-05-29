@@ -23,8 +23,8 @@ chmod +x wp-cli.phar
 mv wp-cli.phar /usr/local/bin/wp
 cd $WP_PATH
 wp core download
-wp core config --dbname=$WP_DB_NAME --dbuser=$WP_DB_USERNAME --dbpass=$MYSQL_ROOT_PASSWORD --dbhost=$MYSQL_HOST
-wp core install --url=$WP_DOMAIN --title=$@WP_TITLE --admin_user=$WP_ADMIN_USERNAME --admin_password=$WP_ADMIN_PASSWORD --admin_email=$WP_ADMIN_EMAIL
+wp core config --dbname="$WP_DB_NAME" --dbuser="$WP_DB_USERNAME" --dbpass="$MYSQL_ROOT_PASSWORD" --dbhost="$MYSQL_HOST"
+wp core install --url="$WP_DOMAIN" --title="$WP_TITLE" --admin_user="$WP_ADMIN_USERNAME" --admin_password="$WP_ADMIN_PASSWORD" --admin_email="$WP_ADMIN_EMAIL"
 usermod -a -G apache ec2-user
 chown -R ec2-user:apache /var/www
 chmod 2775 /var/www
