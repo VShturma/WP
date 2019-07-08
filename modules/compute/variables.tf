@@ -6,7 +6,7 @@ variable "ec2_key_path" {
 
 variable "bastion_sgs" {
   description = "List of security group IDs to assign to a Bastion host"
-  type = "list"
+  type        = list(string)
 }
 
 variable "bastion_instance_type" {
@@ -19,7 +19,7 @@ variable "bastion_user_data" {
 
 variable "bastion_asg_subnets" {
   description = "List of subnets to assign to the Bastion AutoScaling Group"
-  type = "list"
+  type        = list(string)
 }
 
 variable "web_instance_type" {
@@ -28,7 +28,7 @@ variable "web_instance_type" {
 
 variable "web_sgs" {
   description = "List of security group IDs to assign to a Web instance"
-  type = "list"
+  type        = list(string)
 }
 
 variable "web_user_data" {
@@ -45,10 +45,11 @@ variable "web_instances_max" {
 
 variable "web_asg_subnets" {
   description = "List of subnets to assign to the Web AutoScaling Group"
-  type = "list"
+  type        = list(string)
 }
 
 variable "alb_tgs" {
   description = "A list of target group ARNs, for use with Application Load Balancer"
-  type = "list"
+  type        = list(string)
 }
+
