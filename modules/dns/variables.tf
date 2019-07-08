@@ -23,3 +23,4 @@ variable "fs_endpoint" {
 variable "db_endpoint" {
   description = "Database Endpoint"
 }
+
