@@ -33,7 +33,7 @@ module "networking" {
 module "database" {
   source = "./modules/database"
 
-  db_subnets        = ["module.networking.data_subnets"]
+  db_subnets        = module.networking.data_subnets
   db_name           = var.db_name
   db_username       = var.db_username
   db_password       = var.db_password
@@ -45,7 +45,7 @@ module "database" {
 module "efs" {
   source          = "./modules/efs"
   efs_performance = var.efs_performance
-  efs_subnets     = ["module.networking.data_subnets"]
+  efs_subnets     = module.networking.data_subnets
   efs_sgs         = [module.networking.efs_sg]
 }
 
@@ -53,7 +53,7 @@ module "alb" {
   source = "./modules/alb"
 
   alb_sgs     = [module.networking.alb_sg]
-  alb_subnets = ["module.networking.dmz_subnets"]
+  alb_subnets = module.networking.dmz_subnets
   vpc_id      = module.networking.vpc
 }
 
@@ -88,14 +88,14 @@ module "compute" {
 
   bastion_sgs           = [module.networking.bastion_sg]
   bastion_user_data     = data.template_file.bastion_template.rendered
-  bastion_asg_subnets   = ["module.networking.dmz_subnets"]
+  bastion_asg_subnets   = module.networking.dmz_subnets
   bastion_instance_type = var.bastion_instance_type
 
   web_instances_min = var.web_instances_min
   web_instances_max = var.web_instances_max
   web_sgs           = [module.networking.web_sg]
   web_user_data     = data.template_file.web_template.rendered
-  web_asg_subnets   = ["module.networking.app_subnets"]
+  web_asg_subnets   = module.networking.app_subnets
   web_instance_type = var.web_instance_type
   alb_tgs           = [module.alb.alb_tg]
 }

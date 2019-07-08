@@ -5,15 +5,15 @@ output "vpc" {
 }
 
 output "dmz_subnets" {
-  value = [aws_subnet.dmz.*.id]
+  value = aws_subnet.dmz[*].id
 }
 
 output "app_subnets" {
-  value = [aws_subnet.app.*.id]
+  value = aws_subnet.app[*].id
 }
 
 output "data_subnets" {
-  value = [aws_subnet.data.*.id]
+  value = aws_subnet.data[*].id
 }
 
 output "bastion_sg" {

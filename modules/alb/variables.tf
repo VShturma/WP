@@ -7,7 +7,7 @@ variable "alb_sgs" {
 
 variable "alb_subnets" {
   description = "A list of subnet IDs to attach to the ALB"
-  type        = list(string)
+  type        = list
 }
 
 variable "vpc_id" {
