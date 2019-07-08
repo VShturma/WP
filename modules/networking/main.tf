@@ -60,16 +60,16 @@ resource "aws_internet_gateway" "igw" {
 }
 
 # NAT Gateway
-#resource "aws_eip" "nat" {}
+resource "aws_eip" "nat" {}
 
-#resource "aws_nat_gateway" "ngw" {
-#	allocation_id = "${aws_eip.nat.id}"
-#	subnet_id = "${aws_subnet.dmz.0.id}"	#requires an improvment.
-#
-#	tags = {
-#		Name = "NGW"
-#	}
-#}
+resource "aws_nat_gateway" "ngw" {
+	allocation_id = "${aws_eip.nat.id}"
+	subnet_id = "${aws_subnet.dmz.0.id}"	#requires an improvment.
+
+	tags = {
+		Name = "NGW"
+	}
+}
 
 # Routing for DMZ(public) subnets
 resource "aws_route_table" "public" {
@@ -95,10 +95,10 @@ resource "aws_route_table_association" "public" {
 resource "aws_route_table" "private" {
 	vpc_id = "${aws_vpc.main.id}"
 
-#	route {
-#		cidr_block = "0.0.0.0/0"
-#		nat_gateway_id = "${aws_nat_gateway.ngw.id}"
-#	}
+	route {
+		cidr_block = "0.0.0.0/0"
+		nat_gateway_id = "${aws_nat_gateway.ngw.id}"
+	}
 
 	tags = {
 		Name = "privateRT"
