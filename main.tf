@@ -53,7 +53,7 @@ module "alb" {
   source = "./modules/alb"
 
   alb_sgs     = [module.networking.alb_sg]
-  alb_subnets = [module.networking.dmz_subnets]
+  alb_subnets = ["module.networking.dmz_subnets"]
   vpc_id      = module.networking.vpc
 }
 
