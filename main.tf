@@ -33,7 +33,7 @@ module "networking" {
 module "database" {
   source = "./modules/database"
 
-  db_subnets        = [module.networking.data_subnets]
+  db_subnets        = ["module.networking.data_subnets"]
   db_name           = var.db_name
   db_username       = var.db_username
   db_password       = var.db_password

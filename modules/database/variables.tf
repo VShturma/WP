@@ -2,7 +2,7 @@
 
 variable "db_subnets" {
   description = "List of db subnets"
-  type = "list"
+  type        = list(string)
 }
 
 variable "db_name" {
@@ -26,7 +26,7 @@ variable "db_size" {
 }
 
 variable "db_sgs" {
-	description = "List of secutiry groups to associate with the Database"
-	type = "list"
+  description = "List of secutiry groups to associate with the Database"
+  type        = list(string)
 }
 
