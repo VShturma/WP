@@ -17,7 +17,7 @@ data "aws_availability_zones" "available" {}
 resource "aws_subnet" "dmz" {
 	count = "${var.dmz_count}"
 	vpc_id = "${aws_vpc.main.id}"
-	cidr_block = "${var.dmz_subnets.[count.index]}"
+	cidr_block = "${var.dmz_subnets[count.index]}"
 	availability_zone = "${data.aws_availability_zones.available.names[count.index]}"
 	map_public_ip_on_launch = true
 
@@ -30,7 +30,7 @@ resource "aws_subnet" "dmz" {
 resource "aws_subnet" "app" {
 	count = "${var.app_count}"
 	vpc_id = "${aws_vpc.main.id}"
-	cidr_block = "${var.app_subnets.[count.index]}"
+	cidr_block = "${var.app_subnets[count.index]}"
 	availability_zone = "${data.aws_availability_zones.available.names[count.index]}"
 
 	tags = {
@@ -42,7 +42,7 @@ resource "aws_subnet" "app" {
 resource "aws_subnet" "data" {
 	count = "${var.data_count}"
 	vpc_id = "${aws_vpc.main.id}"
-	cidr_block = "${var.data_subnets.[count.index]}"
+	cidr_block = "${var.data_subnets[count.index]}"
 	availability_zone = "${data.aws_availability_zones.available.names[count.index]}"
 
 	tags = {
@@ -232,23 +232,39 @@ resource "aws_security_group" "web" {
 	}
 }
 
-resource "aws_security_group_rule" "allow_egress_http_all" {
+resource "aws_security_group_rule" "allow_egress_http_all_bastion" {
 	type = "egress"
 	from_port = 80
 	to_port = 80
 	protocol = "tcp"
 	cidr_blocks = ["0.0.0.0/0"]
 	security_group_id = "${aws_security_group.bastion.id}" 
+}
+
+resource "aws_security_group_rule" "allow_egress_http_all_web" {
+	type = "egress"
+	from_port = 80
+	to_port = 80
+	protocol = "tcp"
+	cidr_blocks = ["0.0.0.0/0"]
 	security_group_id = "${aws_security_group.web.id}"
 }
 
-resource "aws_security_group_rule" "allow_egress_https_all" {
+resource "aws_security_group_rule" "allow_egress_https_all_bastion" {
 	type = "egress"
 	from_port = 443
 	to_port = 443
 	protocol = "tcp"
 	cidr_blocks = ["0.0.0.0/0"]
 	security_group_id = "${aws_security_group.bastion.id}"
+}
+
+resource "aws_security_group_rule" "allow_egress_https_all_web" {
+	type = "egress"
+	from_port = 443
+	to_port = 443
+	protocol = "tcp"
+	cidr_blocks = ["0.0.0.0/0"]
 	security_group_id = "${aws_security_group.web.id}"
 }
 
