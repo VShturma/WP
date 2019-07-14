@@ -3,15 +3,13 @@
 # Configure the AWS Provider
 provider "aws" {
   region     = var.aws_region
-  access_key = var.aws_access_key
-  secret_key = var.aws_secret_key
   version    = "~> 2.18.0"
 }
 
 #Configure a VPC
 
 module "networking" {
-  source = "../modules/networking"
+  source = "./modules/networking"
 
   vpc_name    = var.vpc_name
   vpc_subnet  = var.vpc_subnet
@@ -31,7 +29,7 @@ module "networking" {
 }
 
 module "database" {
-  source = "../modules/database"
+  source = "./modules/database"
 
   db_subnets        = module.networking.data_subnets
   db_name           = var.db_name
@@ -43,14 +41,14 @@ module "database" {
 }
 
 module "efs" {
-  source          = "../modules/efs"
+  source          = "./modules/efs"
   efs_performance = var.efs_performance
   efs_subnets     = module.networking.data_subnets
   efs_sgs         = [module.networking.efs_sg]
 }
 
 module "alb" {
-  source = "../modules/alb"
+  source = "./modules/alb"
 
   alb_sgs     = [module.networking.alb_sg]
   alb_subnets = module.networking.dmz_subnets
@@ -82,7 +80,7 @@ data "template_file" "web_template" {
 }
 
 module "compute" {
-  source = "../modules/compute"
+  source = "./modules/compute"
 
   ec2_key_path = var.ec2_key_path
 
@@ -101,7 +99,7 @@ module "compute" {
 }
 
 module "dns" {
-  source = "../modules/dns"
+  source = "./modules/dns"
 
   public_domain_name = var.public_domain_name
   alb_dns_name       = module.alb.alb_dns_name
