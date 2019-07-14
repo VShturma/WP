@@ -76,7 +76,7 @@ variable "db_username" {
 
 variable "db_password" {
   description = "Database Master Password"
-  default     = "P@s$w0rd"
+  default     = "123456789Qaz$"
 }
 
 variable "db_instance_class" {
@@ -146,6 +146,5 @@ variable "wp_admin_email" {
 
 variable "wp_admin_password" {
   description = "WordPress Administrator Username Password"
-  default     = "P@s$w0rd"
+  default     = "123456789Qaz$"
 }
-
