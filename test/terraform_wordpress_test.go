@@ -14,8 +14,6 @@ func TestTerraformWordpress(t *testing.T) {
     terraformOptions := &terraform.Options{
         TerraformDir: "../examples/",
 
-        VarFiles: []string{"terraform.tfvars"},
-
         NoColor: true,
     }
 

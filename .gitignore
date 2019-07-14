@@ -1,3 +1,6 @@
 .terraform/
-terraform.*
+terraform.tfvars
+terraform.tfstate*
 test_user_data.tpl
+Dockerfile
+ec2_key.pub
