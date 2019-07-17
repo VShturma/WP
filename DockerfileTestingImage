@@ -22,7 +22,7 @@ RUN yum -y install unzip wget gcc git \
 RUN git clone --branch development https://github.com/VShturma/WP.git /go/src/wordpress
 RUN ssh-keygen -f /go/src/wordpress/examples/ec2_key -t rsa -b 4096
 
-COPY ./.credentials /root/.aws/credentials
+COPY /var/jenkins_home/aws/.credentials /root/.aws/credentials
 
 WORKDIR /go/src/wordpress/test
 RUN /go/bin/dep ensure
