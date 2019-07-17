@@ -5,28 +5,18 @@ pipeline {
   agent {
     dockerfile {
       filename 'DockerfileTestingImage'
-      additionalBuildArgs '--build-arg aws_key=$MYVARNAME_USR --build-arg aws_secret=$MYVARNAME_PSW -t terraform:v1'
+      additionalBuildArgs '--build-arg aws_key=$MYVARNAME_USR --build-arg aws_secret=$MYVARNAME_PSW'
     }
   }
   stages {
     stage('Build') {
-      agent {
-        docker {
-          image 'terraform:v1'
-        }
-      }
       steps {
-        sh '/go/bin/dep ensure'
+        sh 'cd /go/src/wordpress/test && /go/bin/dep ensure'
       }
     }
     stage('Test') {
-      agent {
-        docker {
-          image 'terraform:v1'
-        }
-      }
       steps {
-        sh '''go test -v -count=1 -timeout 90m .
+        sh '''cd /go/src/wordpress/test && go test -v -count=1 -timeout 90m .
 '''
       }
     }
