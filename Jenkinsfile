@@ -12,7 +12,7 @@ pipeline {
         }
       }
       steps {
-        sh '/go/bin/dep ensure'
+        sh 'pwd'
       }
     }
     stage('Test') {
