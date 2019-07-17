@@ -4,8 +4,9 @@ pipeline {
   }
   agent {
     dockerfile {
-      filename 'DockerfileTestingImage'
-      additionalBuildArgs '--build-arg aws_key=$MYVARNAME_USR --build-arg aws_secret=$MYVARNAME_PSW'
+      filename 'Dockerfile'
+      dir 'test'
+      additionalBuildArgs '--build-arg aws_key=${MYVARNAME_USR} --build-arg aws_secret=${MYVARNAME_PSW}'
     }
   }
   stages {
