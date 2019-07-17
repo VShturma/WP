@@ -6,7 +6,7 @@ pipeline {
     dockerfile {
       filename 'Dockerfile'
       dir 'test'
-      additionalBuildArgs '--build-arg aws_key=${AWS_CREDS_USR} --build-arg aws_secret=${AWS_CREDS_PSW}'
+      additionalBuildArgs '--build-arg aws_key=$AWS_CREDS_USR --build-arg aws_secret=$AWS_CREDS_PSW'
     }
   }
   stages {

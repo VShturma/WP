@@ -2,8 +2,8 @@ FROM centos:centos7.6.1810
 
 ENV GOPATH=/go
 ENV PATH $PATH:/usr/local/go/bin
-ARG aws_key
-ARG aws_secret
+ARG aws_key=default_key
+ARG aws_secret=default_secret
 ENV AWS_ACCESS_KEY_ID=$aws_key
 ENV AWS_SECRET_ACCESS_KEY=$aws_secret
 
