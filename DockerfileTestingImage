@@ -2,6 +2,10 @@ FROM centos:centos7.6.1810
 
 ENV GOPATH=/go
 ENV PATH $PATH:/usr/local/go/bin
+ARG aws_key
+ARG aws_secret
+ENV AWS_ACCESS_KEY_ID=$aws_key
+ENV AWS_SECRET_ACCESS_KEY=$aws_secret
 
 WORKDIR /go 
 
@@ -22,7 +26,4 @@ RUN yum -y install unzip wget gcc git \
 RUN git clone --branch development https://github.com/VShturma/WP.git /go/src/wordpress
 RUN ssh-keygen -f /go/src/wordpress/examples/ec2_key -t rsa -b 4096
 
-COPY /var/jenkins_home/aws/.credentials /root/.aws/credentials
-
 WORKDIR /go/src/wordpress/test
-RUN /go/bin/dep ensure

@@ -2,5 +2,4 @@
 terraform.tfvars
 terraform.tfstate*
 test_user_data.tpl
-.credentials
 ec2_key.pub
