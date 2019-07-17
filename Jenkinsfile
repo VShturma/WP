@@ -21,7 +21,7 @@ pipeline {
           filename 'DockerfileTestingImage'
           additionalBuildArgs '--build-arg aws_key=$MYVARNAME_USR --build-arg aws_secret=$MYVARNAME_PSW'
         }
-      agent
+      }
       steps {
         sh '''go test -v -count=1 -timeout 90m .
 '''
