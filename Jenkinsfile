@@ -1,12 +1,13 @@
 pipeline {
   environment {
-    AWS_CREDS = credentials('aws-creds')
+    AWS_ACCESS_KEY_ID     = credentials('jenkins-aws-secret-key-id')
+    AWS_SECRET_ACCESS_KEY = credentials('jenkins-aws-secret-access-key')
   }
   agent {
     dockerfile {
       filename 'Dockerfile'
       dir 'test'
-      additionalBuildArgs '--build-arg aws_key=$AWS_CREDS_USR --build-arg aws_secret=$AWS_CREDS_PSW'
+      additionalBuildArgs '--build-arg aws_key=$AWS_ACCESS_KEY_ID --build-arg aws_secret=$AWS_SECRET_ACCESS_KEY'
     }
   }
   stages {
