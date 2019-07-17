@@ -1,12 +1,12 @@
 pipeline {
   environment {
-    AWS_CREDS = credentials('9b9267bb-c564-4683-b5ab-df3308db5b57')
+    AWS_CREDS = credentials('aws-creds')
   }
   agent {
     dockerfile {
       filename 'Dockerfile'
       dir 'test'
-      additionalBuildArgs '--build-arg aws_key=${MYVARNAME_USR} --build-arg aws_secret=${MYVARNAME_PSW}'
+      additionalBuildArgs '--build-arg aws_key=${AWS_CREDS_USR} --build-arg aws_secret=${AWS_CREDS_PSW}'
     }
   }
   stages {
