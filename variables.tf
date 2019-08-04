@@ -111,7 +111,7 @@ variable "web_instance_type" {
 
 variable "web_instances_min" {
   description = "The minimum (and desired) number of instances in the web tier auto scaling group"
-  default     = 1
+  default     = 0
 }
 
 variable "web_instances_max" {
