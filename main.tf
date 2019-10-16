@@ -62,7 +62,7 @@ data "template_file" "bastion_template" {
 }
 
 data "template_file" "web_template" {
-  template = file("web_user_data.tpl")
+  template = file("web_user_data_docker.tpl")
 
   vars = {
     fs_path             = module.dns.fs_fqdn
