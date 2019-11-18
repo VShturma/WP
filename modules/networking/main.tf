@@ -1,6 +1,9 @@
-#-----/networking/main.tf-----
+#-----modules/networking/main.tf-----
 
+######
 # VPC
+######
+
 resource "aws_vpc" "main" {
   cidr_block           = var.vpc_subnet
   enable_dns_hostnames = true
@@ -14,7 +17,10 @@ resource "aws_vpc" "main" {
 data "aws_availability_zones" "available" {
 }
 
+######################
 # DMZ(public) subnets
+######################
+
 resource "aws_subnet" "dmz" {
   count                   = var.dmz_count
   vpc_id                  = aws_vpc.main.id
@@ -27,7 +33,10 @@ resource "aws_subnet" "dmz" {
   }
 }
 
+#######################
 # APP(private) subnets
+#######################
+
 resource "aws_subnet" "app" {
   count             = var.app_count
   vpc_id            = aws_vpc.main.id
@@ -39,7 +48,10 @@ resource "aws_subnet" "app" {
   }
 }
 
+#########################
 # Data(isolated) subnets
+#########################
+
 resource "aws_subnet" "data" {
   count             = var.data_count
   vpc_id            = aws_vpc.main.id
@@ -51,7 +63,10 @@ resource "aws_subnet" "data" {
   }
 }
 
+###################
 # Internet Gateway
+###################
+
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.main.id
 
@@ -60,7 +75,10 @@ resource "aws_internet_gateway" "igw" {
   }
 }
 
+##############
 # NAT Gateway
+##############
+
 resource "aws_eip" "nat" {
 }
 
@@ -73,7 +91,10 @@ resource "aws_nat_gateway" "ngw" {
   }
 }
 
+##################################
 # Routing for DMZ(public) subnets
+##################################
+
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.main.id
 
@@ -93,7 +114,10 @@ resource "aws_route_table_association" "public" {
   route_table_id = aws_route_table.public.id
 }
 
+###################################
 # Routing for APP(private) subnets
+###################################
+
 resource "aws_route_table" "private" {
   vpc_id = aws_vpc.main.id
 
@@ -113,7 +137,10 @@ resource "aws_route_table_association" "private" {
   route_table_id = aws_route_table.private.id
 }
 
+###################################
 # Routing for DB(isolated) subnets
+###################################
+
 resource "aws_route_table" "isolated" {
   vpc_id = aws_vpc.main.id
 
@@ -128,11 +155,17 @@ resource "aws_route_table_association" "isolated" {
   route_table_id = aws_route_table.isolated.id
 }
 
+#####################################################################################
 # Security Groups
-# Egress rules are configured separately in order to avoid https://github.com/terraform-providers/terraform-provider-aws/issues/6015
+# Egress rules are configured separately in order to avoid 
+# https://github.com/terraform-providers/terraform-provider-aws/issues/6015
 # HTTP/HTTPS egress rules are configured for both bastion and web SGs in one block.
+#####################################################################################
 
-## Bastion SG
+#############
+# Bastion SG
+#############
+
 resource "aws_security_group" "bastion" {
   name        = "BastionSecurityGroup"
   description = "Security group for Bastion instances"
@@ -158,8 +191,10 @@ resource "aws_security_group_rule" "allow_egress_ssh" {
   source_security_group_id = aws_security_group.web.id
   security_group_id        = aws_security_group.bastion.id
 }
+#########
+# ALB SG
+#########
 
-## ALB SG
 resource "aws_security_group" "alb" {
   name        = "PublicAlbSecurityGroup"
   description = "Security group for ALB"
@@ -202,7 +237,10 @@ resource "aws_security_group_rule" "allow_egress_https_web" {
   security_group_id        = aws_security_group.alb.id
 }
 
-## WEB SG
+#########
+# WEB SG
+#########
+
 resource "aws_security_group" "web" {
 
   name        = "WebSecurityGroup"
@@ -288,8 +326,10 @@ resource "aws_security_group_rule" "allow_egress_db" {
   source_security_group_id = aws_security_group.db.id
   security_group_id        = aws_security_group.web.id
 }
+#######
+#DB SG
+#######
 
-##DB SG
 resource "aws_security_group" "db" {
   name        = "DatabaseSecurityGroup"
   description = "Security group for Amazon RDS cluster"
@@ -306,8 +346,10 @@ resource "aws_security_group" "db" {
     Name = "DatabaseSecurityGroup"
   }
 }
+#########
+# EFS SG
+#########
 
-## EFS SG
 resource "aws_security_group" "efs" {
   name        = "EfsSecurityGroup"
   description = "Security group for EFS mount targets"
@@ -325,8 +367,14 @@ resource "aws_security_group" "efs" {
   }
 }
 
+###############
 # Network ACLs
-## DMZ NACL
+###############
+
+###########
+# DMZ NACL
+###########
+
 resource "aws_network_acl" "dmz" {
   vpc_id     = aws_vpc.main.id
   subnet_ids = aws_subnet.dmz.*.id
@@ -410,7 +458,10 @@ resource "aws_network_acl_rule" "naclr_dmz_ssh_allow" {
   to_port        = 22
 }
 
-## APP NACL
+###########
+# APP NACL
+###########
+
 resource "aws_network_acl" "app" {
   vpc_id     = aws_vpc.main.id
   subnet_ids = aws_subnet.app.*.id
@@ -501,7 +552,10 @@ resource "aws_network_acl" "app" {
   }
 }
 
-## DB NACL
+##########
+# DB NACL
+##########
+
 resource "aws_network_acl" "db" {
   vpc_id     = aws_vpc.main.id
   subnet_ids = aws_subnet.data.*.id

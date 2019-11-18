@@ -1,4 +1,4 @@
-#-----/networking/variables.tf-----
+#-----modules/networking/variables.tf-----
 
 variable "vpc_name" {
   description = "Name of a new VPC."
@@ -48,4 +48,3 @@ variable "web_access_ips" {
   description = "List of IPs that can acess web resources via HTTP/HTTPS."
   type        = list(string)
 }
-
