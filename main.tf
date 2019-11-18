@@ -1,12 +1,17 @@
-#-----/main.tf-----
+#-----main.tf-----
 
+#############################
 # Configure the AWS Provider
+#############################
+
 provider "aws" {
   region     = var.aws_region
   version    = "~> 2.18.0"
 }
 
+#################
 #Configure a VPC
+#################
 
 module "networking" {
   source = "./modules/networking"
@@ -28,6 +33,10 @@ module "networking" {
   web_access_ips = var.web_access_ips
 }
 
+##################################
+# Configure an RDS-based database
+##################################
+
 module "database" {
   source = "./modules/database"
 
@@ -40,12 +49,20 @@ module "database" {
   db_sgs            = [module.networking.db_sg]
 }
 
+#########################
+# Configure an EFS share
+#########################
+
 module "efs" {
   source          = "./modules/efs"
   efs_performance = var.efs_performance
   efs_subnets     = module.networking.data_subnets
   efs_sgs         = [module.networking.efs_sg]
 }
+
+##########################################
+# Configure an Application Load Balancer
+##########################################
 
 module "alb" {
   source = "./modules/alb"
@@ -55,7 +72,9 @@ module "alb" {
   vpc_id      = module.networking.vpc
 }
 
-# Specify user_data templates
+##############################
+# Specify User Data templates
+##############################
 
 data "template_file" "bastion_template" {
   template = file("bastion_user_data.tpl")
@@ -79,6 +98,10 @@ data "template_file" "web_template" {
   }
 }
 
+##########################
+# Configure EC2 instances
+##########################
+
 module "compute" {
   source = "./modules/compute"
 
@@ -97,6 +120,10 @@ module "compute" {
   web_instance_type = var.web_instance_type
   alb_tgs           = [module.alb.alb_tg]
 }
+
+#################################
+# Configure Route53 Hosted Zones
+#################################
 
 module "dns" {
   source = "./modules/dns"
