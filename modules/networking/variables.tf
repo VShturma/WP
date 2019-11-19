@@ -48,3 +48,7 @@ variable "web_access_ips" {
   description = "List of IPs that can acess web resources via HTTP/HTTPS."
   type        = list(string)
 }
+
+variable "nat_gw_count" {
+  description = "The number of NAT gateways to provision."
+}

@@ -72,6 +72,11 @@ variable "web_access_ips" {
   default     = ["0.0.0.0/0"]
 }
 
+variable "nat_gw_per_az" {
+  description = "If set to 'true' a NAT gateway will be provisioned for every AZ involved in the app."
+  default     = true
+}
+
 ##################################
 # Configure an RDS-based database
 ##################################

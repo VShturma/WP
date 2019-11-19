@@ -80,14 +80,20 @@ resource "aws_internet_gateway" "igw" {
 ##############
 
 resource "aws_eip" "nat" {
+  count = var.nat_gw_count
+
+  vpc = true
 }
 
 resource "aws_nat_gateway" "ngw" {
-  allocation_id = aws_eip.nat.id
-  subnet_id     = aws_subnet.dmz[0].id #requires an improvment.
+  count = var.nat_gw_count
 
+  allocation_id = element(aws_eip.nat.*.id, count.index)
+  subnet_id     = aws_subnet.dmz[count.index].id
+  depends_on = ["aws_internet_gateway.igw"]
+  
   tags = {
-    Name = "NGW"
+    Name = "NGW${count.index + 1}"
   }
 }
 
@@ -120,21 +126,22 @@ resource "aws_route_table_association" "public" {
 
 resource "aws_route_table" "private" {
   vpc_id = aws_vpc.main.id
-
+  count = length(aws_nat_gateway.ngw)
+  
   route {
     cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.ngw.id
+    nat_gateway_id = aws_nat_gateway.ngw[count.index].id
   }
 
   tags = {
-    Name = "privateRT"
+    Name = "privateRT${count.index + 1}"
   }
 }
 
 resource "aws_route_table_association" "private" {
   count          = length(aws_subnet.app)
   subnet_id      = aws_subnet.app[count.index].id
-  route_table_id = aws_route_table.private.id
+  route_table_id = var.nat_gw_count > 1 ? aws_route_table.private[count.index].id : aws_route_table.private.0.id
 }
 
 ###################################

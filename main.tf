@@ -31,6 +31,8 @@ module "networking" {
 
   ssh_access_ips = var.ssh_access_ips
   web_access_ips = var.web_access_ips
+
+  nat_gw_count = var.nat_gw_per_az ? var.app_count : 1
 }
 
 ##################################
