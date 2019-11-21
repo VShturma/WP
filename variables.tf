@@ -5,7 +5,7 @@
 #############################
 
 variable "aws_region" {
-  default = "eu-central-1"
+  description = "The region where the environment is going to be provisioned."
 }
 
 #################
@@ -178,4 +178,7 @@ variable "web_instances_max" {
   default     = 2
 }
 
-
+variable "web_instances_desired" {
+  description = "The number of desired instances in the web tier auto scaling group"
+  default = 2
+}

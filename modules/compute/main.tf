@@ -72,7 +72,7 @@ resource "aws_autoscaling_group" "web_asg" {
   launch_configuration = aws_launch_configuration.web_lc.name
   min_size             = var.web_instances_min
   max_size             = var.web_instances_max
-  desired_capacity     = var.web_instances_min
+  desired_capacity     = var.web_instances_desired
   health_check_type    = "EC2"
   vpc_zone_identifier  = var.web_asg_subnets
   target_group_arns    = var.alb_tgs
