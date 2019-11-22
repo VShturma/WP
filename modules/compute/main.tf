@@ -49,6 +49,12 @@ resource "aws_autoscaling_group" "bastion_asg" {
   desired_capacity     = 0
   health_check_type    = "EC2"
   vpc_zone_identifier  = var.bastion_asg_subnets
+
+  tag {
+    key = "Name"
+    value = "Bastion"
+    propagate_at_launch = true
+  }
 }
 
 resource "aws_launch_configuration" "web_lc" {
@@ -76,5 +82,11 @@ resource "aws_autoscaling_group" "web_asg" {
   health_check_type    = "EC2"
   vpc_zone_identifier  = var.web_asg_subnets
   target_group_arns    = var.alb_tgs
+
+  tag {
+    key = "Name"
+    value = "Web"
+    propagate_at_launch = true
+  }
 }
 
