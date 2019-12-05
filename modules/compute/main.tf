@@ -61,10 +61,11 @@ resource "aws_launch_configuration" "web_lc" {
   name                        = "web_lc"
   image_id                    = data.aws_ami.amzn_linux2.id
   instance_type               = var.web_instance_type
+  iam_instance_profile        = var.web_instance_profile
   key_name                    = aws_key_pair.ec2_key_pair.key_name
   security_groups             = var.web_sgs
   associate_public_ip_address = true
-  user_data                   = var.web_user_data
+  #user_data                   = var.web_user_data
   enable_monitoring           = false
   ebs_optimized               = false
 

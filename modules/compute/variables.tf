@@ -26,6 +26,10 @@ variable "web_instance_type" {
   description = "Web Instance Type"
 }
 
+variable "web_instance_profile" {
+  description = "IAM Instance Profile for web instances"
+}
+
 variable "web_sgs" {
   description = "List of security group IDs to assign to a Web instance"
   type        = list(string)

@@ -20,7 +20,7 @@ data "aws_iam_policy_document" "ec2-assume-role-policy" {
 }
 
 resource "aws_iam_role" "ssm_role" {
-  name = "SSMInstanceProfile"
+  name = "SSMInstanceRole"
   description = "Allows EC2 instances to call AWS SSM and Cloudwatch services on your behalf"
   assume_role_policy = data.aws_iam_policy_document.ec2-assume-role-policy.json
 }
@@ -35,3 +35,7 @@ resource "aws_iam_role_policy_attachment" "ssm_cloudwatch_attachment" {
   policy_arn = data.aws_iam_policy.cloudwatch.arn
 }
 
+resource "aws_iam_instance_profile" "ssm_profile" {
+  name = "SSMInstanceProfile"
+  role = aws_iam_role.ssm_role.name
+}

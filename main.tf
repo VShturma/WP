@@ -100,6 +100,14 @@ data "template_file" "web_template" {
   }
 }
 
+#################################
+# Configure IAM instance profile
+#################################
+
+module "iam" {
+  source = "./modules/iam"
+}
+
 ##########################
 # Configure EC2 instances
 ##########################
@@ -121,6 +129,7 @@ module "compute" {
   web_user_data     = data.template_file.web_template.rendered
   web_asg_subnets   = module.networking.app_subnets
   web_instance_type = var.web_instance_type
+  web_instance_profile = module.iam.ssm_profile.name
   alb_tgs           = [module.alb.alb_tg]
 }
 
