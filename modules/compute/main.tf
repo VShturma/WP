@@ -32,7 +32,6 @@ resource "aws_launch_configuration" "bastion_lc" {
   key_name                    = aws_key_pair.ec2_key_pair.key_name
   security_groups             = var.bastion_sgs
   associate_public_ip_address = true
-  user_data                   = var.bastion_user_data
   enable_monitoring           = false
   ebs_optimized               = false
 
@@ -65,7 +64,6 @@ resource "aws_launch_configuration" "web_lc" {
   key_name                    = aws_key_pair.ec2_key_pair.key_name
   security_groups             = var.web_sgs
   associate_public_ip_address = true
-  #user_data                   = var.web_user_data
   enable_monitoring           = false
   ebs_optimized               = false
 

@@ -13,10 +13,6 @@ variable "bastion_instance_type" {
   description = "Bastion Instance Type"
 }
 
-variable "bastion_user_data" {
-  description = "User data for a Bastion host"
-}
-
 variable "bastion_asg_subnets" {
   description = "List of subnets to assign to the Bastion AutoScaling Group"
   type        = list(string)
@@ -33,10 +29,6 @@ variable "web_instance_profile" {
 variable "web_sgs" {
   description = "List of security group IDs to assign to a Web instance"
   type        = list(string)
-}
-
-variable "web_user_data" {
-  description = "User data for a Web instance"
 }
 
 variable "web_instances_min" {

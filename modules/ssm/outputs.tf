@@ -1,0 +1,2 @@
+#-----modules/ssm/outputs.tf-----
+

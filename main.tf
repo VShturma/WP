@@ -75,29 +75,25 @@ module "alb" {
 }
 
 ##############################
-# Specify User Data templates
+# Configure SSM parametres
 ##############################
 
-data "template_file" "bastion_template" {
-  template = file("bastion_user_data.tpl")
-}
+module "ssm" {
+  source = "./modules/ssm"
 
-data "template_file" "web_template" {
-  template = file("web_user_data_docker.tpl")
-
-  vars = {
-    fs_path             = module.dns.fs_fqdn
-    mysql_host          = module.dns.db_fqdn
-    mysql_root_password = var.db_password
-    wp_db_username      = var.db_username
-    wp_db_name          = var.db_name
-    wp_path             = var.wp_path
-    wp_domain           = var.public_domain_name
-    wp_title            = var.wp_title
-    wp_admin_username   = var.wp_admin_username
-    wp_admin_email      = var.wp_admin_email
-    wp_admin_password   = var.wp_admin_password
-  }
+  php_version = var.php_version
+  fs_path             = module.dns.fs_fqdn
+  mysql_host          = module.dns.db_fqdn
+  mysql_root_password = var.db_password
+  wp_db_username      = var.db_username
+  wp_db_name          = var.db_name
+  www_path = var.www_path
+  wp_path             = var.wp_path
+  wp_domain           = var.public_domain_name
+  wp_title            = var.wp_title
+  wp_admin_username   = var.wp_admin_username
+  wp_admin_password   = var.wp_admin_password
+  wp_admin_email      = var.wp_admin_email
 }
 
 #################################
@@ -118,7 +114,6 @@ module "compute" {
   ec2_key_path = var.ec2_key_path
 
   bastion_sgs           = [module.networking.bastion_sg]
-  bastion_user_data     = data.template_file.bastion_template.rendered
   bastion_asg_subnets   = module.networking.dmz_subnets
   bastion_instance_type = var.bastion_instance_type
 
@@ -126,7 +121,6 @@ module "compute" {
   web_instances_max = var.web_instances_max
   web_instances_desired = var.web_instances_desired
   web_sgs           = [module.networking.web_sg]
-  web_user_data     = data.template_file.web_template.rendered
   web_asg_subnets   = module.networking.app_subnets
   web_instance_type = var.web_instance_type
   web_instance_profile = module.iam.ssm_profile.name

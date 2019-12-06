@@ -115,18 +115,28 @@ variable "efs_performance" {
   default     = "generalPurpose"
 }
 
-##############################
-# Specify User Data templates
-##############################
+###########################
+# Configure SSM parametres
+###########################
 
-variable "public_domain_name" {
-  description = "Domain Name for the public hosted zone"
-  default     = "test.tk"
+variable "php_version" {
+  description = "Specify PHP version of a Web server"
+  default = "7.2"
+}
+
+variable "www_path" {
+  description = "Web Server direcory"
+  default = "/var/www"
 }
 
 variable "wp_path" {
   description = "Wordpress Site Directory"
   default     = "/var/www/html"
+}
+
+variable "public_domain_name" {
+  description = "Domain Name for the public hosted zone"
+  default     = "test.tk"
 }
 
 variable "wp_title" {
@@ -139,14 +149,14 @@ variable "wp_admin_username" {
   default     = "Admin"
 }
 
-variable "wp_admin_email" {
-  description = "WordPress Administrator Username Email"
-  default     = "test@example.com"
-}
-
 variable "wp_admin_password" {
   description = "WordPress Administrator Username Password"
   default     = "P@s$w0rd"
+}
+
+variable "wp_admin_email" {
+  description = "WordPress Administrator Username Email"
+  default     = "test@example.com"
 }
 
 ##########################
