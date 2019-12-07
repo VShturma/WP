@@ -51,7 +51,7 @@ resource "aws_autoscaling_group" "bastion_asg" {
 
   tag {
     key = "Name"
-    value = "Bastion"
+    value = var.bastion_instance_name_tag
     propagate_at_launch = true
   }
 }
@@ -84,7 +84,7 @@ resource "aws_autoscaling_group" "web_asg" {
 
   tag {
     key = "Name"
-    value = "Web"
+    value = var.web_instance_name_tag
     propagate_at_launch = true
   }
 }

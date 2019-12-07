@@ -18,6 +18,10 @@ variable "bastion_asg_subnets" {
   type        = list(string)
 }
 
+variable "bastion_instance_name_tag" {
+  description = "Specify a name tag that should be assigned to Bastion instances"
+}
+
 variable "web_instance_type" {
   description = "Web Instance Type"
 }
@@ -46,6 +50,10 @@ variable "web_instances_desired" {
 variable "web_asg_subnets" {
   description = "List of subnets to assign to the Web AutoScaling Group"
   type        = list(string)
+}
+
+variable "web_instance_name_tag" {
+  description = "Specify a name tag that should be assigned to Web instances"
 }
 
 variable "alb_tgs" {

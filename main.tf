@@ -102,6 +102,8 @@ module "ssm" {
 
 module "iam" {
   source = "./modules/iam"
+
+  web_instance_name_tag = var.web_instance_name_tag
 }
 
 ##########################
@@ -116,7 +118,7 @@ module "compute" {
   bastion_sgs           = [module.networking.bastion_sg]
   bastion_asg_subnets   = module.networking.dmz_subnets
   bastion_instance_type = var.bastion_instance_type
-
+  bastion_instance_name_tag = var.bastion_instance_name_tag
   web_instances_min = var.web_instances_min
   web_instances_max = var.web_instances_max
   web_instances_desired = var.web_instances_desired
@@ -124,6 +126,7 @@ module "compute" {
   web_asg_subnets   = module.networking.app_subnets
   web_instance_type = var.web_instance_type
   web_instance_profile = module.iam.ssm_profile.name
+  web_instance_name_tag = var.web_instance_name_tag
   alb_tgs           = [module.alb.alb_tg]
 }
 
@@ -142,3 +145,15 @@ module "dns" {
   db_endpoint        = module.database.rds_instance_hostname
 }
 
+##################################
+# Configure Cloudwatch Event Rule
+##################################
+
+module "cloudwatch" {
+  source = "./modules/cloudwatch"
+
+  asg_name = module.compute.web_asg.name
+  aws_region = var.aws_region
+  ssm_role = module.iam.ssm_role.arn
+  web_instance_name_tag = var.web_instance_name_tag  
+}

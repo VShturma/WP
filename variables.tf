@@ -173,6 +173,11 @@ variable "bastion_instance_type" {
   default     = "t2.micro"
 }
 
+variable "bastion_instance_name_tag" {
+  description = "Specify a name tag that should be assigned to Bastion instances"
+  default = "Bastion"
+}
+
 variable "web_instance_type" {
   description = "Web Instance Type"
   default     = "t2.micro"
@@ -191,4 +196,9 @@ variable "web_instances_max" {
 variable "web_instances_desired" {
   description = "The number of desired instances in the web tier auto scaling group"
   default = 2
+}
+
+variable "web_instance_name_tag" {
+  description = "Specify a name tag that should be assigned to Web instances"
+  default = "Web"
 }

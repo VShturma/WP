@@ -14,7 +14,7 @@ data "aws_iam_policy_document" "ec2-assume-role-policy" {
 
     principals {
       type        = "Service"
-      identifiers = ["ec2.amazonaws.com"]
+      identifiers = ["ec2.amazonaws.com", "events.amazonaws.com"]
     }
   }
 }
@@ -39,3 +39,4 @@ resource "aws_iam_instance_profile" "ssm_profile" {
   name = "SSMInstanceProfile"
   role = aws_iam_role.ssm_role.name
 }
+
