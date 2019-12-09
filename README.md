@@ -43,5 +43,5 @@ Furthermore, this implementation is utilizing [Terratest](https://github.com/gru
 }    
 ```
 5. Configure your Terraform environment with the appropriate AWS access credentials. More on this could be found [here](https://www.terraform.io/docs/providers/aws/index.html)
-6. Download the repository content in the Terraform machine.
+6. Download the repository content to the Terraform machine.
 
