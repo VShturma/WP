@@ -77,3 +77,8 @@ The main configuration processes all the variable values and passes them to the 
 * AWS Systems Manager (SSM) parameteres, which store sensitive information used during the WordPress installation
 * AWS Identity and Access (IAM) role for SSM to be able to manage EC2 instances
 
+### Variables
+
+## Tests
+
+##TO-DO
