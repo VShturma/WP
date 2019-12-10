@@ -14,7 +14,7 @@ data "aws_iam_policy_document" "ec2-assume-role-policy" {
 
     principals {
       type        = "Service"
-      identifiers = ["ec2.amazonaws.com", "events.amazonaws.com"]
+      identifiers = ["ec2.amazonaws.com"]
     }
   }
 }
@@ -38,5 +38,60 @@ resource "aws_iam_role_policy_attachment" "ssm_cloudwatch_attachment" {
 resource "aws_iam_instance_profile" "ssm_profile" {
   name = "SSMInstanceProfile"
   role = aws_iam_role.ssm_role.name
+}
+
+resource "aws_iam_policy" "ssm_send_comand_policy" {
+  name = "SSMSendComandPolicy"
+  
+  policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": "ssm:SendCommand",
+            "Effect": "Allow",
+            "Resource": [
+                "arn:aws:ec2:${var.aws_region}:*:instance/*"
+            ],
+            "Condition": {
+                "StringEquals": {
+                    "ec2:ResourceTag/*": [
+                        "${var.web_instance_name_tag}"
+                    ]
+                }
+            }
+        },
+        {
+            "Action": "ssm:SendCommand",
+            "Effect": "Allow",
+            "Resource": [
+                "arn:aws:ssm:${var.aws_region}:*:document/AWS-ApplyAnsiblePlaybooks"
+            ]
+        }
+    ]
+}
+EOF
+}
+
+data "aws_iam_policy_document" "events-assume-role-policy" {
+  statement {
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["events.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_role" "ssm_send_comand_role" {
+  name = "SSMSendCommandRole"
+  description = "Allows running Ansible Playbooks against EC2 instances"
+  assume_role_policy = data.aws_iam_policy_document.events-assume-role-policy.json
+}
+
+resource "aws_iam_role_policy_attachment" "ssm_send_command_attachment" {
+  role = aws_iam_role.ssm_send_comand_role.name
+  policy_arn = aws_iam_policy.ssm_send_comand_policy.arn
 }
 

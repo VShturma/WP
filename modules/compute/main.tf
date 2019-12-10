@@ -63,7 +63,7 @@ resource "aws_launch_configuration" "web_lc" {
   iam_instance_profile        = var.web_instance_profile
   key_name                    = aws_key_pair.ec2_key_pair.key_name
   security_groups             = var.web_sgs
-  associate_public_ip_address = true
+  associate_public_ip_address = false
   enable_monitoring           = false
   ebs_optimized               = false
 
