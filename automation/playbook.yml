@@ -2,7 +2,7 @@
 - hosts: localhost
   vars:
     wp_path: "{{ lookup('aws_ssm', 'wp_path', region=vars['default_region']) }}"
-    default_region: ca-central-1
+    default_region: us-east-1
   tasks:
     - name: Update the OS
       yum:

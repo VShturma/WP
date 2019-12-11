@@ -8,7 +8,7 @@ resource "aws_ssm_association" "configure_web_instances" {
   name = data.aws_ssm_document.aws_apply_ansible_playbooks.name
   association_name = "Configure-Web-Instances"
   
-  parameters = {"SourceType": "GitHub","SourceInfo": "{\"owner\":\"VShturma\",\"repository\":\"WP\",\"path\":\"automation/playbook.yml\",\"getOptions\":\"branch:playbooks\"}","InstallDependencies": "True","PlaybookFile": "playbook.yml","ExtraVariables": "SSM=True","Check": "False","Verbose": "-v"}
+  parameters = {"SourceType": "GitHub","SourceInfo": "{\"owner\":\"VShturma\",\"repository\":\"WP\",\"path\":\"automation/playbook.yml\",\"getOptions\":\"branch:development\"}","InstallDependencies": "True","PlaybookFile": "playbook.yml","ExtraVariables": "SSM=True","Check": "False","Verbose": "-v"}
 
   targets {
     key = "tag:Name"
