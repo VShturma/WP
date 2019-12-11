@@ -107,19 +107,6 @@ module "iam" {
   web_instance_name_tag = var.web_instance_name_tag
 }
 
-##################################
-# Configure Cloudwatch Event Rule
-##################################
-
-#module "cloudwatch" {
-#  source = "./modules/cloudwatch"
-
-#  asg_name = module.compute.web_asg.name
-#  aws_region = var.aws_region
-#  ssm_role = module.iam.ssm_send_comand_role.arn
-#  web_instance_name_tag = var.web_instance_name_tag
-#}
-
 ##########################
 # Configure EC2 instances
 ##########################
