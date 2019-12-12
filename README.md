@@ -69,7 +69,7 @@ This module creates the below set of resources:
 * Network Access Lists (NACLs) for each network type (public, private and isolated)
 
 ### EC2 module
-https://github.com/VShturma/WP/tree/development/modules/compute
+https://github.com/VShturma/WP/tree/development/modules/ec2
 This module creates the below set of resources:
 * Amazon Elastic Load Balancing (ELB) Application Load Balancer (ALB) - in public subnets
 * ALB Target Group with listener on port 80
@@ -77,10 +77,27 @@ This module creates the below set of resources:
 * Web Auto Scaling Group (ASG) - in private subnets
 * A Key Pair to access the instances via SSH (uploaded from your local filesystem)
 
+### RDS module
+https://github.com/VShturma/WP/tree/development/modules/rds
+This module creates the below set of resources:
+* DB Subnet Group
+* Amazon Relational Database Service (Amazon RDS) MySQL instance - in isolated subnet
+
+### EFS module
+https://github.com/VShturma/WP/tree/development/modules/efs
+This module creates the below set of resources:
+* Amazon Elastic File System (Amazon EFS) file system - with mount targets in private subnets
+
+### Route53 module
+https://github.com/VShturma/WP/tree/development/modules/route53
+This module creates the below set of resources:
+* Route53 Public Hosted Zone with a domain name registered earlier (optional).
+* Route53 Private Hosted Zone for RDS and EFS endpoints
+
 ### Main
 The main configuration processes all the variable values and passes them to the corresponding modules. Two most important files involved are [main.tf](https://github.com/VShturma/WP/blob/master/main.tf) and [variables.tf](https://github.com/VShturma/WP/blob/master/variables.tf)
 
-List of the parameteres passed to the [VPC Module](https://github.com/VShturma/WP/blob/development/modules/vpc):
+List of the parameters passed to the [VPC Module](https://github.com/VShturma/WP/blob/development/modules/vpc):
 * VPC name (default value - `WP`)
 * VPC IPv4 CIDR block (default value - `10.100.0.0/16`)
 * VPC tenancy (default value - `default`)
@@ -94,35 +111,53 @@ List of the parameteres passed to the [VPC Module](https://github.com/VShturma/W
 * Web access IPs - a list of client IPs which are allowed to connect to ALB via HTTP (default value - `0.0.0.0/0`)
 
 
-List of the parameteres passed to the [EC2 Module](https://github.com/VShturma/WP/tree/development/modules/compute):
-* Security Group for ALB (imported from VPC module)
+List of the parameters passed to the [EC2 Module](https://github.com/VShturma/WP/tree/development/modules/ec2):
+* Security Groups for ALB (imported from VPC module)
 * Subnets for ALB (imported from VPC module)
 * ID of the target VPC (imported from VPC module)
 * Path to a public key for SSH access (default value - `ec2_key.pub`)
 * Minimum, maximum and desired number of instances in Bastion ASG (default values - `0`, `1` and `0` respectively)
-* Security Group for instances in Bastion ASG (imported from VPC module)
+* Security Groups for instances in Bastion ASG (imported from VPC module)
 * Subnets for instances in Bastion ASG (imported from VPC module)
 * Type of instances in Bastion ASG (default value - `t2.micro`)
 * Name tag for instances in Bastion ASG (default value - `Bastion`)
 * Minimum and desired number of instances in Web ASG (default values - `0` and `2` respectively)
 * Maximum number of instances in Web ASG which is equal to the number of AZs involved (imported from VPC module)
-* Security Group for instances in Web ASG (imported from VPC module)
+* Security Groups for instances in Web ASG (imported from VPC module)
 * Subnets for instances in Web ASG (imported from VPC module)
 * Type of instances in Web ASG (default value - `t2.micro`)
 * Instance profile for instances in Web ASG (imported from SSM module)
 * Name tag for instances in Web ASG (default value - `Web`)
 
+List of the parameters passed to the [RDS Module](https://github.com/VShturma/WP/tree/development/modules/rds):
+* Subnets to be assigned to an RDS instance (imported from VPC module)
+* DB Name (no default value; recommended to specify it in `terraform.tfvars` file)
+* DB Username (no default value; recommended to specify it in `terraform.tfvars` file)
+* DB Password (no default value; recommended to specify it in `terraform.tfvars` file)
+* DB Instance Class (default value - `db.t2.micro`)
+* DB Size (default value - `20`)
+* Security Groups to be assigned to an RDS instance (imported from VPC module)
+* Multi-AZ mode (default value - `true`)
+* skip_final_snapshot (default value - `false`)
+
+List of the parameters passed to the [EFS Module](https://github.com/VShturma/WP/tree/development/modules/efs):
+* EFS performance mode (default value - `generalPurpose`)
+* Subnets for EFS mount targets (imported from VPC module)
+* Security Groups for EFS mount targets (imported from VPC module)
+
+List of the parameters passed to the [Route53 Module](https://github.com/VShturma/WP/tree/development/modules/route53):
+* Public Domain name (optional)
+* ALB's DNS name (imported from EC2 module)
+* ALB's zone ID (imported from EC2 module)
+* VPC ID (imported from VPC module)
+* EFS's DNS name (imported from EFS module)
+* RDS's DNS name (imported from RDS module)
+
 ## Configuration
 
 ### AWS Resources Created
-* Amazon Relational Database Service (Amazon RDS) MySQL instance - in isolated subnet
-* Amazon Elastic File System (Amazon EFS) file system - with mount targets in private subnets
-* Route53 Public Hosted Zone with a domain name registered earlier.
-* Route53 Private Hosted Zone for RDF and EFS endpoints
 * AWS Systems Manager (SSM) parameteres, which store sensitive information used during the WordPress installation
 * AWS Identity and Access (IAM) role for SSM to be able to manage EC2 instances
-
-### Variables
 
 ## Tests
 
