@@ -73,17 +73,14 @@ variable "web_access_ips" {
 
 variable "db_name" {
   description = "Database Name"
-  default     = "wordpress"
 }
 
 variable "db_username" {
   description = "Database Master Username"
-  default     = "root"
 }
 
 variable "db_password" {
   description = "Database Master Password"
-  default     = "P@s$w0rd"
 }
 
 variable "db_instance_class" {
