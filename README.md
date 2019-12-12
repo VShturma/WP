@@ -68,6 +68,15 @@ This module creates the below set of resources:
     - EfsSecurityGroup
 * Network Access Lists (NACLs) for each network type (public, private and isolated)
 
+### EC2 module
+https://github.com/VShturma/WP/tree/development/modules/compute
+This module creates the below set of resources:
+* Amazon Elastic Load Balancing (ELB) Application Load Balancer (ALB) - in public subnets
+* ALB Target Group with listener on port 80
+* Bastion Auto Scaling Group (ASG) - in public subnets
+* Web Auto Scaling Group (ASG) - in private subnets
+* A Key Pair to access the instances via SSH (uploaded from your local filesystem)
+
 ### Main
 The main configuration processes all the variable values and passes them to the corresponding modules. Two most important files involved are [main.tf](https://github.com/VShturma/WP/blob/master/main.tf) and [variables.tf](https://github.com/VShturma/WP/blob/master/variables.tf)
 
@@ -84,14 +93,28 @@ List of the parameteres passed to the [VPC Module](https://github.com/VShturma/W
 * SSH access IPs - a list of client IPs which are allowed to connect to Bastion Host via SSH (default value - `0.0.0.0/0`)
 * Web access IPs - a list of client IPs which are allowed to connect to ALB via HTTP (default value - `0.0.0.0/0`)
 
+
+List of the parameteres passed to the [EC2 Module](https://github.com/VShturma/WP/tree/development/modules/compute):
+* Security Group for ALB (imported from VPC module)
+* Subnets for ALB (imported from VPC module)
+* ID of the target VPC (imported from VPC module)
+* Path to a public key for SSH access (default value - `ec2_key.pub`)
+* Minimum, maximum and desired number of instances in Bastion ASG (default values - `0`, `1` and `0` respectively)
+* Security Group for instances in Bastion ASG (imported from VPC module)
+* Subnets for instances in Bastion ASG (imported from VPC module)
+* Type of instances in Bastion ASG (default value - `t2.micro`)
+* Name tag for instances in Bastion ASG (default value - `Bastion`)
+* Minimum and desired number of instances in Web ASG (default values - `0` and `2` respectively)
+* Maximum number of instances in Web ASG which is equal to the number of AZs involved (imported from VPC module)
+* Security Group for instances in Web ASG (imported from VPC module)
+* Subnets for instances in Web ASG (imported from VPC module)
+* Type of instances in Web ASG (default value - `t2.micro`)
+* Instance profile for instances in Web ASG (imported from SSM module)
+* Name tag for instances in Web ASG (default value - `Web`)
+
 ## Configuration
 
 ### AWS Resources Created
-* Bastion Auto Scaling Group (no instances launched by default) - in public subnets
-* Web Auto Scaling Group (2 instances launched by default) - in private subnets
-* A Key Pair to access the instances via SSH (uploaded from your local filesystem)
-* Amazon Elastic Load Balancing (ELB) Application Load Balancer (ALB) - in public subnets
-* ALB Target Group with listener on port 80
 * Amazon Relational Database Service (Amazon RDS) MySQL instance - in isolated subnet
 * Amazon Elastic File System (Amazon EFS) file system - with mount targets in private subnets
 * Route53 Public Hosted Zone with a domain name registered earlier.
