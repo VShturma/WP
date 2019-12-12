@@ -1,11 +1,11 @@
-#-----modules/networking/main.tf-----
+#-----modules/vpc/main.tf-----
 
 ######
 # VPC
 ######
 
 resource "aws_vpc" "main" {
-  cidr_block           = var.vpc_subnet
+  cidr_block           = var.vpc_ipv4_cidr
   enable_dns_hostnames = true
   instance_tenancy     = var.vpc_tenancy
 
@@ -22,7 +22,7 @@ data "aws_availability_zones" "available" {
 ######################
 
 resource "aws_subnet" "dmz" {
-  count                   = var.dmz_count
+  count                   = var.az_count
   vpc_id                  = aws_vpc.main.id
   cidr_block              = var.dmz_subnets[count.index]
   availability_zone       = data.aws_availability_zones.available.names[count.index]
@@ -38,7 +38,7 @@ resource "aws_subnet" "dmz" {
 #######################
 
 resource "aws_subnet" "app" {
-  count             = var.app_count
+  count             = var.az_count
   vpc_id            = aws_vpc.main.id
   cidr_block        = var.app_subnets[count.index]
   availability_zone = data.aws_availability_zones.available.names[count.index]
@@ -53,7 +53,7 @@ resource "aws_subnet" "app" {
 #########################
 
 resource "aws_subnet" "data" {
-  count             = var.data_count
+  count             = var.az_count
   vpc_id            = aws_vpc.main.id
   cidr_block        = var.data_subnets[count.index]
   availability_zone = data.aws_availability_zones.available.names[count.index]
@@ -90,8 +90,8 @@ resource "aws_nat_gateway" "ngw" {
 
   allocation_id = element(aws_eip.nat.*.id, count.index)
   subnet_id     = aws_subnet.dmz[count.index].id
-  depends_on = ["aws_internet_gateway.igw"]
-  
+  depends_on    = ["aws_internet_gateway.igw"]
+
   tags = {
     Name = "NGW${count.index + 1}"
   }
@@ -126,8 +126,8 @@ resource "aws_route_table_association" "public" {
 
 resource "aws_route_table" "private" {
   vpc_id = aws_vpc.main.id
-  count = length(aws_nat_gateway.ngw)
-  
+  count  = length(aws_nat_gateway.ngw)
+
   route {
     cidr_block     = "0.0.0.0/0"
     nat_gateway_id = aws_nat_gateway.ngw[count.index].id
@@ -419,7 +419,7 @@ resource "aws_network_acl" "dmz" {
     rule_no    = 100
     action     = "allow"
     protocol   = "tcp"
-    cidr_block = var.vpc_subnet
+    cidr_block = var.vpc_ipv4_cidr
   }
 
   egress {
@@ -479,7 +479,7 @@ resource "aws_network_acl" "app" {
     rule_no    = 100
     action     = "allow"
     protocol   = "tcp"
-    cidr_block = var.vpc_subnet
+    cidr_block = var.vpc_ipv4_cidr
   }
 
   ingress {
@@ -488,7 +488,7 @@ resource "aws_network_acl" "app" {
     rule_no    = 110
     action     = "allow"
     protocol   = "tcp"
-    cidr_block = var.vpc_subnet
+    cidr_block = var.vpc_ipv4_cidr
   }
 
   ingress {
@@ -497,7 +497,7 @@ resource "aws_network_acl" "app" {
     rule_no    = 120
     action     = "allow"
     protocol   = "tcp"
-    cidr_block = var.vpc_subnet
+    cidr_block = var.vpc_ipv4_cidr
   }
 
   ingress {
@@ -533,7 +533,7 @@ resource "aws_network_acl" "app" {
     rule_no    = 120
     action     = "allow"
     protocol   = "tcp"
-    cidr_block = var.vpc_subnet
+    cidr_block = var.vpc_ipv4_cidr
   }
 
   egress {
@@ -542,7 +542,7 @@ resource "aws_network_acl" "app" {
     rule_no    = 130
     action     = "allow"
     protocol   = "tcp"
-    cidr_block = var.vpc_subnet
+    cidr_block = var.vpc_ipv4_cidr
   }
 
   egress {
@@ -573,7 +573,7 @@ resource "aws_network_acl" "db" {
     rule_no    = 100
     action     = "allow"
     protocol   = "tcp"
-    cidr_block = var.vpc_subnet
+    cidr_block = var.vpc_ipv4_cidr
   }
 
   ingress {
@@ -582,7 +582,7 @@ resource "aws_network_acl" "db" {
     rule_no    = 110
     action     = "allow"
     protocol   = "tcp"
-    cidr_block = var.vpc_subnet
+    cidr_block = var.vpc_ipv4_cidr
   }
 
   egress {
@@ -591,7 +591,7 @@ resource "aws_network_acl" "db" {
     rule_no    = 100
     action     = "allow"
     protocol   = "tcp"
-    cidr_block = var.vpc_subnet
+    cidr_block = var.vpc_ipv4_cidr
   }
 
   tags = {

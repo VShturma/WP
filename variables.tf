@@ -5,7 +5,7 @@
 #############################
 
 variable "aws_region" {
-  description = "The region where the environment is going to be provisioned."
+  description = "The region where the environment is going to be provisioned"
 }
 
 #################
@@ -13,68 +13,58 @@ variable "aws_region" {
 #################
 
 variable "vpc_name" {
-  description = "Name of a new VPC."
+  description = "Name of a new VPC"
   default     = "WP"
 }
 
-variable "vpc_subnet" {
-  description = "CIDR block for a new VPC."
+variable "vpc_ipv4_cidr" {
+  description = "CIDR block for a new VPC"
   default     = "10.100.0.0/16"
 }
 
 variable "vpc_tenancy" {
-  description = "VPC tenancy value (default or dedicated)."
+  description = "VPC tenancy value (default or dedicated)"
   default     = "default"
 }
 
-variable "dmz_count" {
-  description = "Number of DMZ subnets."
-  default     = 2
-}
-
-variable "app_count" {
-  description = "Number of APP subnets."
-  default     = 2
-}
-
-variable "data_count" {
-  description = "Number of DB subnets."
+variable "az_count" {
+  description = "Number of Availability Zones to provision to"
   default     = 2
 }
 
 variable "dmz_subnets" {
   description = "List of CIDR blocks for DMZ(public) subnets."
   type        = list(string)
-  default     = ["10.100.1.0/24", "10.100.2.0/24"]
+  default     = ["10.100.1.0/24", "10.100.2.0/24", "10.100.3.0/24", "10.100.4.0/24", "10.100.5.0/24", "10.100.6.0/24"]
 }
 
 variable "app_subnets" {
   description = "List of CIDR blocks for APP(private) subnets."
   type        = list(string)
-  default     = ["10.100.11.0/24", "10.100.12.0/24"]
+  default     = ["10.100.11.0/24", "10.100.12.0/24", "10.100.13.0/24", "10.100.14.0/24", "10.100.15.0/24", "10.100.16.0/24"]
 }
 
 variable "data_subnets" {
   description = "List of CIDR blocks for Data(isolated) subnets."
   type        = list(string)
-  default     = ["10.100.21.0/24", "10.100.22.0/24"]
+  default     = ["10.100.21.0/24", "10.100.22.0/24", "10.100.23.0/24", "10.100.24.0/24", "10.100.25.0/24", "10.100.26.0/24"]
+}
+
+variable "nat_gw_per_az" {
+  description = "If set to 'true' a NAT gateway will be provisioned for every AZ involved in the app"
+  default     = true
 }
 
 variable "ssh_access_ips" {
-  description = "List of IPs that can SSH to a Bastion host."
+  description = "List of IPs that can SSH to a Bastion host"
   type        = list(string)
   default     = ["0.0.0.0/0"]
 }
 
 variable "web_access_ips" {
-  description = "List of IPs that can acess web resources via HTTP/HTTPS."
+  description = "List of IPs that can acess web resources via HTTP"
   type        = list(string)
   default     = ["0.0.0.0/0"]
-}
-
-variable "nat_gw_per_az" {
-  description = "If set to 'true' a NAT gateway will be provisioned for every AZ involved in the app."
-  default     = true
 }
 
 ##################################

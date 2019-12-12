@@ -13,27 +13,25 @@ provider "aws" {
 #Configure a VPC
 #################
 
-module "networking" {
-  source = "./modules/networking"
+module "vpc" {
+  source = "./modules/vpc"
 
   vpc_name    = var.vpc_name
-  vpc_subnet  = var.vpc_subnet
+  vpc_ipv4_cidr  = var.vpc_ipv4_cidr
   vpc_tenancy = var.vpc_tenancy
 
-  dmz_count   = var.dmz_count
+  az_count = var.az_count
+
   dmz_subnets = var.dmz_subnets
-
-  app_count   = var.app_count
   app_subnets = var.app_subnets
-
-  data_count   = var.data_count
   data_subnets = var.data_subnets
+
+# If nat_gw_per_az is 'true'(default) a NAT gateway will be created for every AZ. Otherwise, there will be only 1 NAT gateway per region
+  nat_gw_count = var.nat_gw_per_az ? var.az_count : 1
 
   ssh_access_ips = var.ssh_access_ips
   web_access_ips = var.web_access_ips
-
-  nat_gw_count = var.nat_gw_per_az ? var.app_count : 1
-}
+ }
 
 ##################################
 # Configure an RDS-based database
@@ -42,13 +40,13 @@ module "networking" {
 module "database" {
   source = "./modules/database"
 
-  db_subnets        = module.networking.data_subnets
+  db_subnets        = module.vpc.data_subnets
   db_name           = var.db_name
   db_username       = var.db_username
   db_password       = var.db_password
   db_instance_class = var.db_instance_class
   db_size           = var.db_size
-  db_sgs            = [module.networking.db_sg]
+  db_sgs            = [module.vpc.db_sg]
 }
 
 #########################
@@ -58,8 +56,8 @@ module "database" {
 module "efs" {
   source          = "./modules/efs"
   efs_performance = var.efs_performance
-  efs_subnets     = module.networking.data_subnets
-  efs_sgs         = [module.networking.efs_sg]
+  efs_subnets     = module.vpc.data_subnets
+  efs_sgs         = [module.vpc.efs_sg]
 }
 
 ##########################################
@@ -69,9 +67,9 @@ module "efs" {
 module "alb" {
   source = "./modules/alb"
 
-  alb_sgs     = [module.networking.alb_sg]
-  alb_subnets = module.networking.dmz_subnets
-  vpc_id      = module.networking.vpc
+  alb_sgs     = [module.vpc.alb_sg]
+  alb_subnets = module.vpc.dmz_subnets
+  vpc_id      = module.vpc.vpc
 }
 
 ##############################
@@ -116,15 +114,15 @@ module "compute" {
 
   ec2_key_path = var.ec2_key_path
 
-  bastion_sgs           = [module.networking.bastion_sg]
-  bastion_asg_subnets   = module.networking.dmz_subnets
+  bastion_sgs           = [module.vpc.bastion_sg]
+  bastion_asg_subnets   = module.vpc.dmz_subnets
   bastion_instance_type = var.bastion_instance_type
   bastion_instance_name_tag = var.bastion_instance_name_tag
   web_instances_min = var.web_instances_min
   web_instances_max = var.web_instances_max
   web_instances_desired = var.web_instances_desired
-  web_sgs           = [module.networking.web_sg]
-  web_asg_subnets   = module.networking.app_subnets
+  web_sgs           = [module.vpc.web_sg]
+  web_asg_subnets   = module.vpc.app_subnets
   web_instance_type = var.web_instance_type
   web_instance_profile = module.iam.ssm_profile.name
   web_instance_name_tag = var.web_instance_name_tag
@@ -141,7 +139,7 @@ module "dns" {
   public_domain_name = var.public_domain_name
   alb_dns_name       = module.alb.alb_dns_name
   alb_zone_id        = module.alb.alb_zone_id
-  vpc_id             = module.networking.vpc
+  vpc_id             = module.vpc.vpc
   fs_endpoint        = module.efs.efs_dns_name
   db_endpoint        = module.database.rds_instance_hostname
 }
