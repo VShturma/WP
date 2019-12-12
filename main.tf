@@ -60,18 +60,6 @@ module "efs" {
   efs_sgs         = [module.vpc.efs_sg]
 }
 
-##########################################
-# Configure an Application Load Balancer
-##########################################
-
-module "alb" {
-  source = "./modules/alb"
-
-  alb_sgs     = [module.vpc.alb_sg]
-  alb_subnets = module.vpc.dmz_subnets
-  vpc_id      = module.vpc.vpc
-}
-
 ##############################
 # Configure SSM parametres
 ##############################
@@ -105,12 +93,16 @@ module "iam" {
   web_instance_name_tag = var.web_instance_name_tag
 }
 
-##########################
-# Configure EC2 instances
-##########################
+##################################
+# Configure EC2 instances and ALB
+##################################
 
 module "ec2" {
   source = "./modules/ec2"
+
+  alb_sgs     = [module.vpc.alb_sg]
+  alb_subnets = module.vpc.dmz_subnets
+  vpc_id      = module.vpc.vpc
 
   ec2_key_path = var.ec2_key_path
 
@@ -126,7 +118,6 @@ module "ec2" {
   web_instance_type = var.web_instance_type
   web_instance_profile = module.iam.ssm_profile.name
   web_instance_name_tag = var.web_instance_name_tag
-  alb_tgs           = [module.alb.alb_tg]
 }
 
 #################################
@@ -137,8 +128,8 @@ module "dns" {
   source = "./modules/dns"
 
   public_domain_name = var.public_domain_name
-  alb_dns_name       = module.alb.alb_dns_name
-  alb_zone_id        = module.alb.alb_zone_id
+  alb_dns_name       = module.ec2.alb_dns_name
+  alb_zone_id        = module.ec2.alb_zone_id
   vpc_id             = module.vpc.vpc
   fs_endpoint        = module.efs.efs_dns_name
   db_endpoint        = module.database.rds_instance_hostname

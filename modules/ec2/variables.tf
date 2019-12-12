@@ -1,4 +1,26 @@
-#-----modules/compute/variables.tf-----
+#-----modules/ec2/variables.tf-----
+
+################
+# Configure ALB
+################
+
+variable "alb_sgs" {
+  description = "A list of security group IDs to assign to the ALB"
+  type        = list(string)
+}
+
+variable "alb_subnets" {
+  description = "A list of subnet IDs to attach to the ALB"
+  type        = list
+}
+
+variable "vpc_id" {
+  description = "The identifier of the VPC in which to create the target group"
+}
+
+#################
+# Configure ASGs
+#################
 
 variable "ec2_key_path" {
   description = "EC2 Key Pair path"
@@ -56,8 +78,4 @@ variable "web_instance_name_tag" {
   description = "Specify a name tag that should be assigned to Web instances"
 }
 
-variable "alb_tgs" {
-  description = "A list of target group ARNs, for use with Application Load Balancer"
-  type        = list(string)
-}
 

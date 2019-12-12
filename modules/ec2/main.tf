@@ -1,4 +1,52 @@
-#-----modules/compute/main.tf-----
+#-----modules/ec2/main.tf-----
+
+################
+# Configure ALB
+################
+
+resource "aws_lb" "alb_wp" {
+  name               = "ALB-WP"
+  internal           = false
+  load_balancer_type = "application"
+  security_groups    = var.alb_sgs
+  subnets            = var.alb_subnets
+  ip_address_type    = "ipv4"
+
+  tags = {
+    Name = "ALB-WP"
+  }
+}
+
+resource "aws_lb_target_group" "alb_tg_public" {
+  name     = "PublicAlbTG"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = var.vpc_id
+
+  health_check {
+    path    = "/wp-config.php"
+    matcher = "200"
+  }
+
+  tags = {
+    Name = "PublicAlbTG"
+  }
+}
+
+resource "aws_lb_listener" "front_end_http" {
+  load_balancer_arn = aws_lb.alb_wp.arn
+  port              = "80"
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.alb_tg_public.arn
+  }
+}
+
+#################
+# Configure ASGs
+################
 
 data "aws_ami" "amzn_linux2" {
   owners      = ["amazon"]
@@ -80,7 +128,7 @@ resource "aws_autoscaling_group" "web_asg" {
   desired_capacity     = var.web_instances_desired
   health_check_type    = "EC2"
   vpc_zone_identifier  = var.web_asg_subnets
-  target_group_arns    = var.alb_tgs
+  target_group_arns    = [aws_lb_target_group.alb_tg_public.arn]
 
   tag {
     key = "Name"
