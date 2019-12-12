@@ -62,6 +62,21 @@ module "efs" {
   efs_sgs         = [module.vpc.efs_sg]
 }
 
+#################################
+# Configure Route53 Hosted Zones
+#################################
+
+module "route53" {
+  source = "./modules/route53"
+
+  public_domain_name = var.public_domain_name
+  alb_dns_name       = module.ec2.alb_dns_name
+  alb_zone_id        = module.ec2.alb_zone_id
+  vpc_id             = module.vpc.vpc
+  fs_endpoint        = module.efs.efs_dns_name
+  db_endpoint        = module.rds.rds_instance_hostname
+}
+
 ##############################
 # Configure SSM parametres
 ##############################
@@ -70,8 +85,8 @@ module "ssm" {
   source = "./modules/ssm"
 
   php_version = var.php_version
-  fs_path             = module.dns.fs_fqdn
-  mysql_host          = module.dns.db_fqdn
+  fs_path             = module.route53.fs_fqdn
+  mysql_host          = module.route53.db_fqdn
   mysql_root_password = var.db_password
   wp_db_username      = var.db_username
   wp_db_name          = var.db_name
@@ -125,18 +140,4 @@ module "ec2" {
   web_instance_name_tag = var.web_instance_name_tag
 }
 
-#################################
-# Configure Route53 Hosted Zones
-#################################
-
-module "dns" {
-  source = "./modules/dns"
-
-  public_domain_name = var.public_domain_name
-  alb_dns_name       = module.ec2.alb_dns_name
-  alb_zone_id        = module.ec2.alb_zone_id
-  vpc_id             = module.vpc.vpc
-  fs_endpoint        = module.efs.efs_dns_name
-  db_endpoint        = module.rds.rds_instance_hostname
-}
 

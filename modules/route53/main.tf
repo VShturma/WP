@@ -1,4 +1,4 @@
-#-----modules/dns/main.tf-----
+#-----modules/route53/main.tf-----
 
 resource "aws_route53_zone" "public" {
   name    = var.public_domain_name

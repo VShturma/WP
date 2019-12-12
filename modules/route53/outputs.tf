@@ -1,4 +1,4 @@
-#-----modules/dns/outputs.tf-----
+#-----modules/route53/outputs.tf-----
 
 output "fs_fqdn" {
   value = aws_route53_record.fs.fqdn

@@ -1,4 +1,4 @@
-#-----modules/dns/variables.tf-----
+#-----modules/route53/variables.tf-----
 
 variable "public_domain_name" {
   description = "Domain Name for the public hosted zone"
