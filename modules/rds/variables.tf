@@ -1,4 +1,4 @@
-#-----/database/variables.tf-----
+#-----rds/variables.tf-----
 
 variable "db_subnets" {
   description = "List of db subnets"

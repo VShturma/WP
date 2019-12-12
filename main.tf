@@ -37,8 +37,8 @@ module "vpc" {
 # Configure an RDS-based database
 ##################################
 
-module "database" {
-  source = "./modules/database"
+module "rds" {
+  source = "./modules/rds"
 
   db_subnets        = module.vpc.data_subnets
   db_name           = var.db_name
@@ -135,6 +135,6 @@ module "dns" {
   alb_zone_id        = module.ec2.alb_zone_id
   vpc_id             = module.vpc.vpc
   fs_endpoint        = module.efs.efs_dns_name
-  db_endpoint        = module.database.rds_instance_hostname
+  db_endpoint        = module.rds.rds_instance_hostname
 }
 

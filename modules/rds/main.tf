@@ -1,4 +1,4 @@
-#-----/database/main.tf-----
+#-----rds/main.tf-----
 
 resource "aws_db_subnet_group" "default" {
   name        = "wp-subnet-group"
