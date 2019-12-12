@@ -109,8 +109,8 @@ module "iam" {
 # Configure EC2 instances
 ##########################
 
-module "compute" {
-  source = "./modules/compute"
+module "ec2" {
+  source = "./modules/ec2"
 
   ec2_key_path = var.ec2_key_path
 
