@@ -105,13 +105,16 @@ module "ec2" {
   vpc_id      = module.vpc.vpc
 
   ec2_key_path = var.ec2_key_path
-
+  
+  bastion_instances_min = var.bastion_instances_min
+  bastion_instances_max = var.bastion_instances_max
+  bastion_instances_desired = var.bastion_instances_desired
   bastion_sgs           = [module.vpc.bastion_sg]
   bastion_asg_subnets   = module.vpc.dmz_subnets
   bastion_instance_type = var.bastion_instance_type
   bastion_instance_name_tag = var.bastion_instance_name_tag
   web_instances_min = var.web_instances_min
-  web_instances_max = var.web_instances_max
+  web_instances_max = var.az_count
   web_instances_desired = var.web_instances_desired
   web_sgs           = [module.vpc.web_sg]
   web_asg_subnets   = module.vpc.app_subnets

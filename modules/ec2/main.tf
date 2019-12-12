@@ -91,9 +91,9 @@ resource "aws_launch_configuration" "bastion_lc" {
 resource "aws_autoscaling_group" "bastion_asg" {
   name                 = "bastion_asg"
   launch_configuration = aws_launch_configuration.bastion_lc.name
-  min_size             = 0
-  max_size             = 1
-  desired_capacity     = 0
+  min_size             = var.bastion_instances_min
+  max_size             = var.bastion_instances_max
+  desired_capacity     = var.bastion_instances_desired
   health_check_type    = "EC2"
   vpc_zone_identifier  = var.bastion_asg_subnets
 

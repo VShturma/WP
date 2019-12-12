@@ -26,6 +26,19 @@ variable "ec2_key_path" {
   description = "EC2 Key Pair path"
 }
 
+variable "bastion_instances_min" {
+  description = "The minimum number of instances in the bastion auto scaling group"
+}
+
+variable "bastion_instances_max" {
+  description = "The maximum number of instances in the bastion auto scaling group"
+}
+
+variable "bastion_instances_desired" {
+  description = "The number of desired instances in the bastion auto scaling group"
+}
+
+
 variable "bastion_sgs" {
   description = "List of security group IDs to assign to a Bastion host"
   type        = list(string)
@@ -58,7 +71,7 @@ variable "web_sgs" {
 }
 
 variable "web_instances_min" {
-  description = "The minimum (and desired) number of instances in the web tier auto scaling group"
+  description = "The minimum number of instances in the web tier auto scaling group"
 }
 
 variable "web_instances_max" {

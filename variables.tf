@@ -158,6 +158,22 @@ variable "ec2_key_path" {
   default     = "ec2_key.pub"
 }
 
+variable "bastion_instances_min" {
+  description = "The minimum number of instances in the bastion auto scaling group"
+  default     = 0
+}
+
+variable "bastion_instances_max" {
+  description = "The maximum number of instances in the bastion auto scaling group"
+  default     = 1
+}
+
+variable "bastion_instances_desired" {
+  description = "The number of desired instances in the bastion auto scaling group"
+  default = 0
+}
+
+
 variable "bastion_instance_type" {
   description = "Bastion Instance Type"
   default     = "t2.micro"
@@ -174,13 +190,8 @@ variable "web_instance_type" {
 }
 
 variable "web_instances_min" {
-  description = "The minimum (and desired) number of instances in the web tier auto scaling group"
+  description = "The minimum number of instances in the web tier auto scaling group"
   default     = 0
-}
-
-variable "web_instances_max" {
-  description = "The maximum number of instances in the web tier auto scaling group"
-  default     = 2
 }
 
 variable "web_instances_desired" {
