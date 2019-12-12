@@ -69,7 +69,9 @@ module "efs" {
 module "route53" {
   source = "./modules/route53"
 
+# If set to 'false'(default) an ALB's endpoint will be used
   public_domain_name = var.public_domain_name
+
   alb_dns_name       = module.ec2.alb_dns_name
   alb_zone_id        = module.ec2.alb_zone_id
   vpc_id             = module.vpc.vpc
@@ -92,7 +94,7 @@ module "ssm" {
   wp_db_name          = var.db_name
   www_path = var.www_path
   wp_path             = var.wp_path
-  wp_domain           = var.public_domain_name
+  wp_domain           = var.public_domain_name ? var.public_domain_name : module.ec2.alb_dns_name
   wp_title            = var.wp_title
   wp_admin_username   = var.wp_admin_username
   wp_admin_password   = var.wp_admin_password

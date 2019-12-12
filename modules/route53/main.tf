@@ -1,12 +1,22 @@
 #-----modules/route53/main.tf-----
 
+#################################
+# Configure a public Hosted Zone
+#################################
+
 resource "aws_route53_zone" "public" {
+
+  count = var.public_domain_name ? 1 : 0  
+
   name    = var.public_domain_name
   comment = "Public hosted zone for a WordPress environment"
 }
 
 resource "aws_route53_record" "www" {
-  zone_id = aws_route53_zone.public.zone_id
+
+  count = var.public_domain_name ? 1 : 0
+  
+  zone_id = aws_route53_zone.public[count.index].zone_id
   name    = var.public_domain_name
   type    = "A"
 
@@ -16,6 +26,10 @@ resource "aws_route53_record" "www" {
     evaluate_target_health = false
   }
 }
+
+##################################
+# Configure a private Hosted Zone
+##################################
 
 resource "aws_route53_zone" "private" {
   name    = "wp.local"

@@ -112,6 +112,15 @@ variable "efs_performance" {
   default     = "generalPurpose"
 }
 
+#################################
+# Configure Route53 Hosted Zones
+#################################
+
+variable "public_domain_name" {
+  description = "Domain Name for the public hosted zone. If set to 'false' an ALB's endpoint will be used"
+  default     = false
+}
+
 ###########################
 # Configure SSM parametres
 ###########################
@@ -129,11 +138,6 @@ variable "www_path" {
 variable "wp_path" {
   description = "Wordpress Site Directory"
   default     = "/var/www/html"
-}
-
-variable "public_domain_name" {
-  description = "Domain Name for the public hosted zone"
-  default     = "test.tk"
 }
 
 variable "wp_title" {

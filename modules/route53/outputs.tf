@@ -9,5 +9,5 @@ output "db_fqdn" {
 }
 
 output "public_zone_nameservers" {
-  value = aws_route53_zone.public.name_servers
+  value = aws_route53_zone.public.*.name_servers
 }

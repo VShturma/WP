@@ -1,7 +1,7 @@
 #-----modules/route53/variables.tf-----
 
 variable "public_domain_name" {
-  description = "Domain Name for the public hosted zone"
+  description = "Domain Name for the public hosted zone. If set to 'false' an ALB's endpoint will be used"
 }
 
 variable "alb_dns_name" {
