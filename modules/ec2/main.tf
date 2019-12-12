@@ -98,8 +98,8 @@ resource "aws_autoscaling_group" "bastion_asg" {
   vpc_zone_identifier  = var.bastion_asg_subnets
 
   tag {
-    key = "Name"
-    value = var.bastion_instance_name_tag
+    key                 = "Name"
+    value               = var.bastion_instance_name_tag
     propagate_at_launch = true
   }
 }
@@ -131,8 +131,8 @@ resource "aws_autoscaling_group" "web_asg" {
   target_group_arns    = [aws_lb_target_group.alb_tg_public.arn]
 
   tag {
-    key = "Name"
-    value = var.web_instance_name_tag
+    key                 = "Name"
+    value               = var.web_instance_name_tag
     propagate_at_launch = true
   }
 }
