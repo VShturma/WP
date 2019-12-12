@@ -47,6 +47,8 @@ module "rds" {
   db_instance_class = var.db_instance_class
   db_size           = var.db_size
   db_sgs            = [module.vpc.db_sg]
+  multi_az          = var.multi_az
+  skip_final_snapshot    = var.skip_final_snapshot
 }
 
 #########################

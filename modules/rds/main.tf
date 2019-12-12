@@ -21,6 +21,8 @@ resource "aws_db_instance" "default" {
   engine                    = "mysql"
   storage_type              = "gp2"
   db_subnet_group_name      = aws_db_subnet_group.default.name
+  multi_az                  = var.multi_az
+  skip_final_snapshot       = var.skip_final_snapshot
   final_snapshot_identifier = "wordpress-final-snapshot-${md5(timestamp())}"
 
   tags = {

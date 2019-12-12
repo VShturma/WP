@@ -30,3 +30,10 @@ variable "db_sgs" {
   type        = list(string)
 }
 
+variable "multi_az" {
+  description = "Specifies if the RDS instance is multi-AZ"
+}
+
+variable "skip_final_snapshot" {
+  description = "Determines whether a final DB snapshot is created before the DB instance is deleted"
+}

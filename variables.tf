@@ -96,6 +96,16 @@ variable "db_size" {
   default     = 20
 }
 
+variable "multi_az" {
+  description = "Specifies if the RDS instance is multi-AZ"
+  default = true
+}
+
+variable "skip_final_snapshot" {
+  description = "Determines whether a final DB snapshot is created before the DB instance is deleted"
+  default = false
+}
+
 #########################
 # Configure an EFS share
 #########################
