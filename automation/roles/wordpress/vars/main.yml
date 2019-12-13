@@ -1,4 +1,5 @@
 ---
+wp_path: "{{ lookup('aws_ssm', 'wp_path', region=vars['default_region']) }}"
 fs_path: "{{ lookup('aws_ssm', 'fs_path', region=vars['default_region']) }}"
 wp_db_name: "{{ lookup('aws_ssm', 'wp_db_name', region=vars['default_region']) }}"
 wp_db_username: "{{ lookup('aws_ssm', 'wp_db_username', region=vars['default_region']) }}"
