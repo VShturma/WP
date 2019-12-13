@@ -50,7 +50,7 @@ Furthermore, this implementation is utilizing [Terratest](https://github.com/gru
 
 ## Modules
 ### VPC module
-https://github.com/VShturma/WP/blob/development/modules/vpc
+https://github.com/VShturma/WP/blob/master/modules/vpc
 
 This module creates the below set of resources:
 * Amazon Virtual Private Cloud (VPC)
@@ -69,7 +69,7 @@ This module creates the below set of resources:
 * Network Access Lists (NACLs) for each network type (public, private and isolated)
 
 ### EC2 module
-https://github.com/VShturma/WP/tree/development/modules/ec2
+https://github.com/VShturma/WP/tree/master/modules/ec2
 This module creates the below set of resources:
 * Amazon Elastic Load Balancing (ELB) Application Load Balancer (ALB) - in public subnets
 * ALB Target Group with listener on port 80
@@ -78,28 +78,28 @@ This module creates the below set of resources:
 * A Key Pair to access the instances via SSH (uploaded from your local filesystem)
 
 ### RDS module
-https://github.com/VShturma/WP/tree/development/modules/rds
+https://github.com/VShturma/WP/tree/master/modules/rds
 This module creates the below set of resources:
 * DB Subnet Group
 * Amazon Relational Database Service (Amazon RDS) MySQL instance - in isolated subnet
 
 ### EFS module
-https://github.com/VShturma/WP/tree/development/modules/efs
+https://github.com/VShturma/WP/tree/master/modules/efs
 This module creates the below set of resources:
 * Amazon Elastic File System (Amazon EFS) file system - with mount targets in private subnets
 
 ### Route53 module
-https://github.com/VShturma/WP/tree/development/modules/route53
+https://github.com/VShturma/WP/tree/master/modules/route53
 This module creates the below set of resources:
 * Route53 Public Hosted Zone with a domain name registered earlier (optional).
 * Route53 Private Hosted Zone for RDS and EFS endpoints
 
 ### IAM module
-https://github.com/VShturma/WP/tree/development/modules/iam
+https://github.com/VShturma/WP/tree/master/modules/iam
 This module creates an IAM Role which will then be assigned to Web instances so that they can connect to Amazon Systems Manager (SSM)
 
 ### SSM module
-https://github.com/VShturma/WP/tree/development/modules/ssm
+https://github.com/VShturma/WP/tree/master/modules/ssm
 This module creates a set of resources that contribute to running an Ansible playbook on an EC2 instance launch:
 * AWS Systems Manager (SSM) State Manager Association - links `AWS-ApplyAnsiblePlaybooks` Command Document with managed EC2 instances
 * A number of parameters in SSM Parameter Store - used as variables in an Ansible playbook
@@ -107,7 +107,7 @@ This module creates a set of resources that contribute to running an Ansible pla
 ## Main Configuration
 The main configuration processes all the variable values and passes them to the corresponding modules. Two most important files involved are [main.tf](https://github.com/VShturma/WP/blob/master/main.tf) and [variables.tf](https://github.com/VShturma/WP/blob/master/variables.tf)
 
-1. List of the parameters passed to the [VPC Module](https://github.com/VShturma/WP/blob/development/modules/vpc):
+1. List of the parameters passed to the [VPC Module](https://github.com/VShturma/WP/blob/master/modules/vpc):
 * VPC name (default value - `WP`)
 * VPC IPv4 CIDR block (default value - `10.100.0.0/16`)
 * VPC tenancy (default value - `default`)
@@ -121,7 +121,7 @@ The main configuration processes all the variable values and passes them to the 
 * Web access IPs - a list of client IPs which are allowed to connect to ALB via HTTP (default value - `0.0.0.0/0`)
 
 
-2. List of the parameters passed to the [EC2 Module](https://github.com/VShturma/WP/tree/development/modules/ec2):
+2. List of the parameters passed to the [EC2 Module](https://github.com/VShturma/WP/tree/master/modules/ec2):
 * Security Groups for ALB (imported from VPC module)
 * Subnets for ALB (imported from VPC module)
 * ID of the target VPC (imported from VPC module)
@@ -139,7 +139,7 @@ The main configuration processes all the variable values and passes them to the 
 * Instance profile for instances in Web ASG (imported from SSM module)
 * Name tag for instances in Web ASG (default value - `Web`)
 
-3. List of the parameters passed to the [RDS Module](https://github.com/VShturma/WP/tree/development/modules/rds):
+3. List of the parameters passed to the [RDS Module](https://github.com/VShturma/WP/tree/master/modules/rds):
 * Subnets to be assigned to an RDS instance (imported from VPC module)
 * DB Name (no default value; recommended to specify it in `terraform.tfvars` file)
 * DB Username (no default value; recommended to specify it in `terraform.tfvars` file)
@@ -150,12 +150,12 @@ The main configuration processes all the variable values and passes them to the 
 * Multi-AZ mode (default value - `true`)
 * skip_final_snapshot (default value - `false`)
 
-4. List of the parameters passed to the [EFS Module](https://github.com/VShturma/WP/tree/development/modules/efs):
+4. List of the parameters passed to the [EFS Module](https://github.com/VShturma/WP/tree/master/modules/efs):
 * EFS performance mode (default value - `generalPurpose`)
 * Subnets for EFS mount targets (imported from VPC module)
 * Security Groups for EFS mount targets (imported from VPC module)
 
-5. List of the parameters passed to the [Route53 Module](https://github.com/VShturma/WP/tree/development/modules/route53):
+5. List of the parameters passed to the [Route53 Module](https://github.com/VShturma/WP/tree/master/modules/route53):
 * Public Domain name (optional)
 * ALB's DNS name (imported from EC2 module)
 * ALB's zone ID (imported from EC2 module)
@@ -163,7 +163,7 @@ The main configuration processes all the variable values and passes them to the 
 * EFS's DNS name (imported from EFS module)
 * RDS's DNS name (imported from RDS module)
 
-6. List of the parameters passed to the [SSM Module](https://github.com/VShturma/WP/tree/development/modules/ssm)
+6. List of the parameters passed to the [SSM Module](https://github.com/VShturma/WP/tree/master/modules/ssm)
 * Name Tag used to filter EC2 Web instances (specified in EC2 module)
 
 - These are uploaded to SSM Parameter Store and used as WordPress installation options in an Ansible playbook:
@@ -181,7 +181,7 @@ The main configuration processes all the variable values and passes them to the 
     * WordPress Admin user's password (no default value; recommended to specify it in `terraform.tfvars` file)
     * WordPress Admin user's email (no default value; recommended to specify it in `terraform.tfvars` file)
 
-- Below parameteres specify the path an Ansible playbook which is used by `AWS-ApplyAnsiblePlaybooks` Command Document:
+- Below parameteres specify the path to an Ansible playbook which is used by `AWS-ApplyAnsiblePlaybooks` Command Document:
     * Repository Source Type (default value - `GitHub`)
     * Repository Owner (default value - `VShturma`)
     * Repository Name (default value - `WP`)
