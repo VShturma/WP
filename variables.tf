@@ -147,17 +147,14 @@ variable "wp_title" {
 
 variable "wp_admin_username" {
   description = "WordPress Administrator Username"
-  default     = "Admin"
 }
 
 variable "wp_admin_password" {
   description = "WordPress Administrator Username Password"
-  default     = "P@s$w0rd"
 }
 
 variable "wp_admin_email" {
   description = "WordPress Administrator Username Email"
-  default     = "test@example.com"
 }
 
 variable "repo_source_type" {
