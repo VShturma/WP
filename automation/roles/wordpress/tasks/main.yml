@@ -1,0 +1,67 @@
+---
+- name: Mount an EFS filesystem
+  mount:
+    path: "{{ wp_path }}"
+    src: "{{ fs_path }}:/"
+    fstype: efs
+    state: mounted
+ 
+- name: Install WP CLI tool
+  get_url:
+    url: https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+    dest: /usr/local/bin/wp
+    mode: "0755"
+    
+- name: WP installation checker 1
+  command: wp core is-installed
+  register: is_installed1
+  ignore_errors: yes
+  args:
+    chdir: "{{ wp_path }}"
+    
+- name: Download WP CORE
+  command: wp core download
+  when: is_installed1.rc > 0
+  args:
+    chdir: "{{ wp_path }}"
+    
+- name: WP installation checker 2
+  command: wp core is-installed
+  register: is_installed2
+  ignore_errors: yes
+  args:
+    chdir: "{{ wp_path }}"
+    
+- name: Config WordPress
+  command: wp core config --dbname="{{ wp_db_name }}" --dbuser="{{ wp_db_username }}" --dbpass="{{ mysql_root_password }}" --dbhost="{{ mysql_host }}"
+  when: is_installed2.rc > 0
+  args:
+    chdir: "{{ wp_path }}"
+
+- name: WP installation checker 3
+  command: wp core is-installed
+  register: is_installed3
+  ignore_errors: yes
+  args:
+    chdir: "{{ wp_path }}"
+   
+- name: Install WordPress
+  command: wp core install --url="{{ wp_domain }}" --title="{{ wp_title }}" --admin_user="{{ wp_admin_username }}" --admin_password="{{ wp_admin_password }}" --admin_email="{{ wp_admin_email }}"
+  when: is_installed3.rc > 0
+  args:
+    chdir: "{{ wp_path }}"
+  
+- name: Add user ec2-user to apache group
+  user:
+    name: ec2-user
+    groups: apache
+    append: yes
+    
+- name: Change directory permission
+  file:
+    path: "{{ www_path }}"
+    group: apache
+    owner: ec2-user
+    recurse: yes
+    state: directory
+    mode: u=rwX,g=rwX,o=rX

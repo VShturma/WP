@@ -1,0 +1,8 @@
+---
+packages:
+  - httpd
+  - mariadb
+  - amazon-efs-utils
+  - python-pip
+
+php_version: "{{ lookup('aws_ssm', 'php_version', region=vars['default_region']) }}"

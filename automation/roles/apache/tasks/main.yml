@@ -1,0 +1,18 @@
+---
+- name: Install the necessary packages
+  yum:
+    name: "{{ packages }}"
+    state: latest
+
+- name: Install Boto3
+  pip:
+    name: boto3
+
+- name: Install PHP from Amazon repos
+  command: amazon-linux-extras install -y php{{ php_version }}
+
+- name: Enable Apache service
+  systemd:
+    name: httpd
+    enabled: yes
+    state: started  
