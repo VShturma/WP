@@ -86,15 +86,18 @@ module "route53" {
 module "ssm" {
   source = "./modules/ssm"
 
-  php_version = var.php_version
+  php_version         = var.php_version
   fs_path             = module.route53.fs_fqdn
   mysql_host          = module.route53.db_fqdn
   mysql_root_password = var.db_password
   wp_db_username      = var.db_username
   wp_db_name          = var.db_name
-  www_path = var.www_path
+  www_path            = var.www_path
   wp_path             = var.wp_path
+  
+  # If set to 'false'(default) an ALB's endpoint will be used
   wp_domain           = var.public_domain_name ? var.public_domain_name : module.ec2.alb_dns_name
+  
   wp_title            = var.wp_title
   wp_admin_username   = var.wp_admin_username
   wp_admin_password   = var.wp_admin_password
@@ -107,9 +110,6 @@ module "ssm" {
 
 module "iam" {
   source = "./modules/iam"
-
-  aws_region = var.aws_region 
-  web_instance_name_tag = var.web_instance_name_tag
 }
 
 ##################################
@@ -141,5 +141,3 @@ module "ec2" {
   web_instance_profile = module.iam.ssm_profile.name
   web_instance_name_tag = var.web_instance_name_tag
 }
-
-
