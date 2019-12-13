@@ -86,6 +86,7 @@ module "route53" {
 module "ssm" {
   source = "./modules/ssm"
 
+  # WordPress paramateres
   php_version         = var.php_version
   fs_path             = module.route53.fs_fqdn
   mysql_host          = module.route53.db_fqdn
@@ -102,6 +103,17 @@ module "ssm" {
   wp_admin_username   = var.wp_admin_username
   wp_admin_password   = var.wp_admin_password
   wp_admin_email      = var.wp_admin_email
+
+  instance_name_tag = var.web_instance_name_tag
+
+  # Specify a repository where an Ansible playbook is stored 
+  repo_source_type = var.repo_source_type
+  repo_owner = var.repo_owner
+  repo_name = var.repo_name
+  repo_path = var.repo_path
+  repo_branch = var.repo_branch
+  playbook_file = var.playbook_file
+
 }
 
 #################################

@@ -8,11 +8,14 @@ resource "aws_ssm_association" "configure_web_instances" {
   name = data.aws_ssm_document.aws_apply_ansible_playbooks.name
   association_name = "Configure-Web-Instances"
   
-  parameters = {"SourceType": "GitHub","SourceInfo": "{\"owner\":\"VShturma\",\"repository\":\"WP\",\"path\":\"automation/playbook.yml\",\"getOptions\":\"branch:development\"}","InstallDependencies": "True","PlaybookFile": "playbook.yml","ExtraVariables": "SSM=True","Check": "False","Verbose": "-v"}
+  parameters = {"SourceType":var.repo_source_type,
+                "SourceInfo": "{\"owner\":\"${var.repo_owner}\",\"repository\":\"${var.repo_name}\",\"path\":\"${var.repo_path}\",\"getOptions\":\"${var.repo_branch}\"}",
+                "InstallDependencies": "True","PlaybookFile": var.playbook_file,
+                "ExtraVariables": "SSM=True","Check": "False","Verbose": "-v"}
 
   targets {
     key = "tag:Name"
-    values = ["Web"]
+    values = [var.instance_name_tag]
   }
 }
 
@@ -24,13 +27,13 @@ resource "aws_ssm_parameter" "php_version" {
 
 resource "aws_ssm_parameter" "fs_path" {
   name = "fs_path"
-  type = "String"
+  type = "SecureString"
   value = var.fs_path
 }
 
 resource "aws_ssm_parameter" "mysql_host" {
   name = "mysql_host"
-  type = "String"
+  type = "SecureString"
   value = var.mysql_host
 }
 
@@ -60,7 +63,7 @@ resource "aws_ssm_parameter" "www_path" {
 
 resource "aws_ssm_parameter" "wp_path" {
   name = "wp_path"
-  type = "String"
+  type = "SecureString"
   value = var.wp_path
 }
 

@@ -160,6 +160,36 @@ variable "wp_admin_email" {
   default     = "test@example.com"
 }
 
+variable "repo_source_type" {
+  description = "Repository source type"
+  default = "GitHub"
+}
+
+variable "repo_owner" {
+  description = "Repository owner"
+  default = "VShturma"
+}
+
+variable "repo_name" {
+  description = "Name of the repository"
+  default = "WP"
+}
+
+variable "repo_path" {
+  description = "Specify the path to a content that is going to be downloaded"
+  default = "automation/playbook.yml"
+}
+
+variable "repo_branch" {
+  description = "Specify the repository branch"
+  default = "branch:development"
+}
+
+variable "playbook_file" {
+  description = "Name of the playbook file"
+  default = "playbook.yml"
+}
+
 ##########################
 # Configure EC2 instances
 ##########################
