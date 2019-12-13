@@ -3,3 +3,13 @@
   yum:
     name: '*'
     state: latest
+
+- name: Install the necessary packages
+  yum:
+    name: "{{ packages }}"
+    state: latest
+
+- name: Install Boto3
+  pip:
+    name: boto3
+

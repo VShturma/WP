@@ -1,12 +1,8 @@
 ---
-- name: Install the necessary packages
+- name: Install Apache 
   yum:
     name: "{{ packages }}"
     state: latest
-
-- name: Install Boto3
-  pip:
-    name: boto3
 
 - name: Install PHP from Amazon repos
   command: amazon-linux-extras install -y php{{ php_version }}
