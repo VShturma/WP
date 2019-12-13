@@ -95,12 +95,12 @@ variable "db_size" {
 
 variable "multi_az" {
   description = "Specifies if the RDS instance is multi-AZ"
-  default = true
+  default     = true
 }
 
 variable "skip_final_snapshot" {
   description = "Determines whether a final DB snapshot is created before the DB instance is deleted"
-  default = false
+  default     = false
 }
 
 #########################
@@ -127,12 +127,12 @@ variable "public_domain_name" {
 
 variable "php_version" {
   description = "Specify PHP version of a Web server"
-  default = "7.2"
+  default     = "7.2"
 }
 
 variable "www_path" {
   description = "Web Server direcory"
-  default = "/var/www"
+  default     = "/var/www"
 }
 
 variable "wp_path" {
@@ -159,32 +159,32 @@ variable "wp_admin_email" {
 
 variable "repo_source_type" {
   description = "Repository source type"
-  default = "GitHub"
+  default     = "GitHub"
 }
 
 variable "repo_owner" {
   description = "Repository owner"
-  default = "VShturma"
+  default     = "VShturma"
 }
 
 variable "repo_name" {
   description = "Name of the repository"
-  default = "WP"
+  default     = "WP"
 }
 
 variable "repo_path" {
   description = "Specify the path to a content that is going to be downloaded"
-  default = "automation/playbook.yml"
+  default     = "automation/playbook.yml"
 }
 
 variable "repo_branch" {
   description = "Specify the repository branch"
-  default = "branch:development"
+  default     = "branch:development"
 }
 
 variable "playbook_file" {
   description = "Name of the playbook file"
-  default = "playbook.yml"
+  default     = "playbook.yml"
 }
 
 ##########################
@@ -208,7 +208,7 @@ variable "bastion_instances_max" {
 
 variable "bastion_instances_desired" {
   description = "The number of desired instances in the bastion auto scaling group"
-  default = 0
+  default     = 0
 }
 
 
@@ -219,7 +219,7 @@ variable "bastion_instance_type" {
 
 variable "bastion_instance_name_tag" {
   description = "Specify a name tag that should be assigned to Bastion instances"
-  default = "Bastion"
+  default     = "Bastion"
 }
 
 variable "web_instance_type" {
@@ -234,10 +234,10 @@ variable "web_instances_min" {
 
 variable "web_instances_desired" {
   description = "The number of desired instances in the web tier auto scaling group"
-  default = 2
+  default     = 2
 }
 
 variable "web_instance_name_tag" {
   description = "Specify a name tag that should be assigned to Web instances"
-  default = "Web"
+  default     = "Web"
 }

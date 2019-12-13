@@ -16,13 +16,13 @@ data "aws_iam_policy_document" "ec2-assume-role-policy" {
 }
 
 resource "aws_iam_role" "ssm_instance_role" {
-  name = "SSMInstanceRole"
-  description = "Allows EC2 instances to call AWS SSM service on your behalf"
+  name               = "SSMInstanceRole"
+  description        = "Allows EC2 instances to call AWS SSM service on your behalf"
   assume_role_policy = data.aws_iam_policy_document.ec2-assume-role-policy.json
 }
 
 resource "aws_iam_role_policy_attachment" "ssm_attachment" {
-  role = aws_iam_role.ssm_instance_role.name
+  role       = aws_iam_role.ssm_instance_role.name
   policy_arn = data.aws_iam_policy.ssm_policy.arn
 }
 

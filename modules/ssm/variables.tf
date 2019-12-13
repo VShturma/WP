@@ -56,11 +56,11 @@ variable "instance_name_tag" {
   description = "Specify a name tag used by SSM to filter target instances"
 }
 
-variable "repo_source_type" { 
+variable "repo_source_type" {
   description = "Repository source type"
 }
 
-variable "repo_owner" { 
+variable "repo_owner" {
   description = "Repository owner"
 }
 
@@ -68,15 +68,15 @@ variable "repo_name" {
   description = "Name of the repository"
 }
 
-variable "repo_path" { 
+variable "repo_path" {
   description = "Specify the path to a content that is going to be downloaded"
 }
 
-variable "repo_branch" { 
+variable "repo_branch" {
   description = "Specify the repository branch"
 }
 
-variable "playbook_file" { 
+variable "playbook_file" {
   description = "Name of the playbook file"
 }
 

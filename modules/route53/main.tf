@@ -6,7 +6,7 @@
 
 resource "aws_route53_zone" "public" {
 
-  count = var.public_domain_name ? 1 : 0  
+  count = var.public_domain_name ? 1 : 0
 
   name    = var.public_domain_name
   comment = "Public hosted zone for a WordPress environment"
@@ -15,7 +15,7 @@ resource "aws_route53_zone" "public" {
 resource "aws_route53_record" "www" {
 
   count = var.public_domain_name ? 1 : 0
-  
+
   zone_id = aws_route53_zone.public[count.index].zone_id
   name    = var.public_domain_name
   type    = "A"
