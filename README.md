@@ -100,7 +100,9 @@ This module creates an IAM Role which will then be assigned to Web instances so 
 
 ### SSM module
 https://github.com/VShturma/WP/tree/development/modules/ssm
-
+This module creates a set of resources that contribute to running an Ansible playbook on an EC2 instance launch:
+* AWS Systems Manager (SSM) State Manager Association - links `AWS-ApplyAnsiblePlaybooks` Command Document with managed EC2 instances
+* A number of parameters in SSM Parameter Store - used as variables in an Ansible playbook
 
 ## Main Configuration
 The main configuration processes all the variable values and passes them to the corresponding modules. Two most important files involved are [main.tf](https://github.com/VShturma/WP/blob/master/main.tf) and [variables.tf](https://github.com/VShturma/WP/blob/master/variables.tf)
@@ -161,7 +163,28 @@ The main configuration processes all the variable values and passes them to the 
 * EFS's DNS name (imported from EFS module)
 * RDS's DNS name (imported from RDS module)
 
-### AWS Resources Created
-* AWS Systems Manager (SSM) parameteres, which store sensitive information used during the WordPress installation
-* AWS Identity and Access (IAM) role for SSM to be able to manage EC2 instances
+6. List of the parameters passed to the [SSM Module](https://github.com/VShturma/WP/tree/development/modules/ssm)
+* Name Tag used to filter EC2 Web instances (specified in EC2 module)
 
+- These are uploaded to SSM Parameter Store and used as WordPress installation options in an Ansible playbook:
+    * PHP version to be installed on Web instances (default value - `7.2`)
+    * DNS name of EFS mount target (imported from Route53 module)
+    * DNS name of RDS instance (imported from Route53 module)
+    * DB root password (no default value; recommended to specify it in `terraform.tfvars` file)
+    * DB username (no default value; recommended to specify it in `terraform.tfvars` file)
+    * DB name (no default value; recommended to specify it in `terraform.tfvars` file)
+    * WWW path (default value - `/var/www`)
+    * WordPress path (default value - `/var/www/html`)
+    * WordPress domain name (either public DNS name imported from Route53 module or DNS name of ALB imported from EC2 module)
+    * WordPress title (default value - `WordPress Test Page`)
+    * WordPress Admin user's username (no default value; recommended to specify it in `terraform.tfvars` file)
+    * WordPress Admin user's password (no default value; recommended to specify it in `terraform.tfvars` file)
+    * WordPress Admin user's email (no default value; recommended to specify it in `terraform.tfvars` file)
+
+- Below parameteres specify the path an Ansible playbook which is used by `AWS-ApplyAnsiblePlaybooks` Command Document:
+    * Repository Source Type (default value - `GitHub`)
+    * Repository Owner (default value - `VShturma`)
+    * Repository Name (default value - `WP`)
+    * Repository Path (default value - `automation/playbook.yml`)
+    * Repository Branch (default value - `branch:master`)
+    * Playbook File name (default value - `playbook.yml`)
