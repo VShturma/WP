@@ -94,10 +94,18 @@ This module creates the below set of resources:
 * Route53 Public Hosted Zone with a domain name registered earlier (optional).
 * Route53 Private Hosted Zone for RDS and EFS endpoints
 
-### Main
+### IAM module
+https://github.com/VShturma/WP/tree/development/modules/iam
+This module creates an IAM Role which will then be assigned to Web instances so that they can connect to Amazon Systems Manager (SSM)
+
+### SSM module
+https://github.com/VShturma/WP/tree/development/modules/ssm
+
+
+## Main Configuration
 The main configuration processes all the variable values and passes them to the corresponding modules. Two most important files involved are [main.tf](https://github.com/VShturma/WP/blob/master/main.tf) and [variables.tf](https://github.com/VShturma/WP/blob/master/variables.tf)
 
-List of the parameters passed to the [VPC Module](https://github.com/VShturma/WP/blob/development/modules/vpc):
+1. List of the parameters passed to the [VPC Module](https://github.com/VShturma/WP/blob/development/modules/vpc):
 * VPC name (default value - `WP`)
 * VPC IPv4 CIDR block (default value - `10.100.0.0/16`)
 * VPC tenancy (default value - `default`)
@@ -111,7 +119,7 @@ List of the parameters passed to the [VPC Module](https://github.com/VShturma/WP
 * Web access IPs - a list of client IPs which are allowed to connect to ALB via HTTP (default value - `0.0.0.0/0`)
 
 
-List of the parameters passed to the [EC2 Module](https://github.com/VShturma/WP/tree/development/modules/ec2):
+2. List of the parameters passed to the [EC2 Module](https://github.com/VShturma/WP/tree/development/modules/ec2):
 * Security Groups for ALB (imported from VPC module)
 * Subnets for ALB (imported from VPC module)
 * ID of the target VPC (imported from VPC module)
@@ -129,7 +137,7 @@ List of the parameters passed to the [EC2 Module](https://github.com/VShturma/WP
 * Instance profile for instances in Web ASG (imported from SSM module)
 * Name tag for instances in Web ASG (default value - `Web`)
 
-List of the parameters passed to the [RDS Module](https://github.com/VShturma/WP/tree/development/modules/rds):
+3. List of the parameters passed to the [RDS Module](https://github.com/VShturma/WP/tree/development/modules/rds):
 * Subnets to be assigned to an RDS instance (imported from VPC module)
 * DB Name (no default value; recommended to specify it in `terraform.tfvars` file)
 * DB Username (no default value; recommended to specify it in `terraform.tfvars` file)
@@ -140,12 +148,12 @@ List of the parameters passed to the [RDS Module](https://github.com/VShturma/WP
 * Multi-AZ mode (default value - `true`)
 * skip_final_snapshot (default value - `false`)
 
-List of the parameters passed to the [EFS Module](https://github.com/VShturma/WP/tree/development/modules/efs):
+4. List of the parameters passed to the [EFS Module](https://github.com/VShturma/WP/tree/development/modules/efs):
 * EFS performance mode (default value - `generalPurpose`)
 * Subnets for EFS mount targets (imported from VPC module)
 * Security Groups for EFS mount targets (imported from VPC module)
 
-List of the parameters passed to the [Route53 Module](https://github.com/VShturma/WP/tree/development/modules/route53):
+5. List of the parameters passed to the [Route53 Module](https://github.com/VShturma/WP/tree/development/modules/route53):
 * Public Domain name (optional)
 * ALB's DNS name (imported from EC2 module)
 * ALB's zone ID (imported from EC2 module)
@@ -153,12 +161,7 @@ List of the parameters passed to the [Route53 Module](https://github.com/VShturm
 * EFS's DNS name (imported from EFS module)
 * RDS's DNS name (imported from RDS module)
 
-## Configuration
-
 ### AWS Resources Created
 * AWS Systems Manager (SSM) parameteres, which store sensitive information used during the WordPress installation
 * AWS Identity and Access (IAM) role for SSM to be able to manage EC2 instances
 
-## Tests
-
-## TO-DO
