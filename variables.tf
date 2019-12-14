@@ -174,7 +174,7 @@ variable "repo_name" {
 
 variable "repo_path" {
   description = "Specify the path to a content that is going to be downloaded"
-  default     = "automation/playbook.yml"
+  default     = "automation"
 }
 
 variable "repo_branch" {
@@ -184,7 +184,7 @@ variable "repo_branch" {
 
 variable "playbook_file" {
   description = "Name of the playbook file"
-  default     = "playbook.yml"
+  default     = "site.yml"
 }
 
 ##########################
