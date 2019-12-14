@@ -1,6 +1,6 @@
 # Overview
 This is a [Terraform](https://www.terraform.io/)-based template that provisions a WordPress application in AWS. The  [Cloudformation template](https://github.com/aws-samples/aws-refarch-wordpress), as well as [AWS guide](https://d1.awsstatic.com/whitepapers/wordpress-best-practices-on-aws.pdf) were used as a reference.
-Furthermore, this implementation is utilizing [Terratest](https://github.com/gruntwork-io/terratest) to perform the integration tests.
+This implementation is also utilizing [Terratest](https://github.com/gruntwork-io/terratest) to perform the integration tests. Finally, AWS Systems Manager is used to apply an Ansible playbook for the instance configuration purposes (instead of "user data").
 
 ## Installation
 1. Install Terraform according to the [guide](https://learn.hashicorp.com/terraform/getting-started/install.html)
@@ -15,35 +15,9 @@ Furthermore, this implementation is utilizing [Terratest](https://github.com/gru
     - AmazonVPCFullAccess
     - AmazonElasticFileSystemFullAccess
     - AmazonRoute53FullAccess
-    - CloudWatchEventsFullAccess
-    - SSMTerraformPolicy. This is a custom policy which looks like this:
-```
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Sid": "VisualEditor0",
-            "Effect": "Allow",
-            "Action": [
-                "ssm:PutParameter",
-                "ssm:LabelParameterVersion",
-                "ssm:DeleteParameter",
-                "ssm:DescribeParameters",
-                "ssm:RemoveTagsFromResource",
-                "ssm:AddTagsToResource",
-                "ssm:ListTagsForResource",
-                "ssm:GetParametersByPath",
-                "ssm:GetParameters",
-                "ssm:GetParameter",
-                "ssm:DeleteParameters"
-            ],
-            "Resource": "*"
-        }
-    ]
-}    
-```
+    - AmazonSSMFullAccess
 5. Configure your Terraform environment with the appropriate AWS access credentials. More on this could be found [here](https://www.terraform.io/docs/providers/aws/index.html)
-6. Target AWS region should also be configured in the Ansible playbook file.
+6. Target AWS region should also be configured as a variable in the Ansible playbook [file](https://github.com/VShturma/WP/blob/master/automation/group_vars/all). It must be identical to the one configured in Terraform.
 7. Download the repository content to the Terraform machine.
 8. Generate a key pair that will be used to access your instances via SSH. The configuration expects to find your public key under the name `ec2_key.pub` in the working directory (default value, can be changed under `ec2_key_path` value in [variables.tf](https://github.com/VShturma/WP/blob/master/variables.tf)).
 9. Register a domain name with either Route53 or a third-party service.
@@ -185,9 +159,9 @@ The main configuration processes all the variable values and passes them to the 
     * Repository Source Type (default value - `GitHub`)
     * Repository Owner (default value - `VShturma`)
     * Repository Name (default value - `WP`)
-    * Repository Path (default value - `automation/playbook.yml`)
+    * Repository Path (default value - `automation`)
     * Repository Branch (default value - `branch:master`)
-    * Playbook File name (default value - `playbook.yml`)
+    * Playbook File name (default value - `site.yml`)
 
 
 ## Tests
@@ -199,3 +173,10 @@ The integration testing is accomplished by the means of [Terratest](https://gith
     - Put `AWS_ACCESS_KEY_ID` into Jenkins credential named `jenkins-aws-secret-key-id`
     - Put `AWS_SECRET_ACCESS_KEY` into Jenkins credential named `jenkins-aws-secret-access-key`
 3. Create a Multibranch pipeline (specify `https://github.com/VShturma/WP` as the repository URL)
+
+
+## Ideas for improvements
+- Make tests more sophisticated
+- Add monitoring (Cloudwatch dashboards/alarms)
+- Improve security (encryption of data at rest and in transit)
+- Add ability to configure backups/snapshots (RDS; EC2; EFS)
