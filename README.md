@@ -188,3 +188,14 @@ The main configuration processes all the variable values and passes them to the 
     * Repository Path (default value - `automation/playbook.yml`)
     * Repository Branch (default value - `branch:master`)
     * Playbook File name (default value - `playbook.yml`)
+
+
+## Tests
+The integration testing is accomplished by the means of [Terratest](https://github.com/gruntwork-io/terratest). The repository contains a [Jenkinsfile](https://github.com/VShturma/WP/blob/master/Jenkinsfile), which describes a multibranch pipeline. This pipeline picks up a [Dockerfile](https://github.com/VShturma/WP/blob/master/test/Dockerfile) and builds an image with Terraform, Go and Terratest inside. After that Terratest executes the tests described at [test.go file](https://github.com/VShturma/WP/blob/master/test/terraform_wordpress_test.go). During the test Terraform builds an infrastructure using the configs from [examples](https://github.com/VShturma/WP/tree/master/examples) folder.
+
+### Getting started with tests
+1. Install Jenkins using the [guide](https://jenkins.io/doc/book/installing/)
+2. Configure Jenkins Credentials with AWS access credentials. They will be passed as arguments inside the testing Docker image. You may use [this]() guide as a reference.
+    - Put `AWS_ACCESS_KEY_ID` into Jenkins credential named `jenkins-aws-secret-key-id`
+    - Put `AWS_SECRET_ACCESS_KEY` into Jenkins credential named `jenkins-aws-secret-access-key`
+3. Create a Multibranch pipeline (specify `https://github.com/VShturma/WP` as the repository URL)
