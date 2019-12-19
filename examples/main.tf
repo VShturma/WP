@@ -1,20 +1,15 @@
-#-----main.tf-----
+#-----/main.tf-----
 
-#############################
 # Configure the AWS Provider
-#############################
-
 provider "aws" {
   region     = var.aws_region
   version    = "~> 2.18.0"
 }
 
-#################
 #Configure a VPC
-#################
 
 module "networking" {
-  source = "./modules/networking"
+  source = "../modules/networking"
 
   vpc_name    = var.vpc_name
   vpc_subnet  = var.vpc_subnet
@@ -31,16 +26,10 @@ module "networking" {
 
   ssh_access_ips = var.ssh_access_ips
   web_access_ips = var.web_access_ips
-
-  nat_gw_count = var.nat_gw_per_az ? var.app_count : 1
 }
 
-##################################
-# Configure an RDS-based database
-##################################
-
 module "database" {
-  source = "./modules/database"
+  source = "../modules/database"
 
   db_subnets        = module.networking.data_subnets
   db_name           = var.db_name
@@ -51,39 +40,29 @@ module "database" {
   db_sgs            = [module.networking.db_sg]
 }
 
-#########################
-# Configure an EFS share
-#########################
-
 module "efs" {
-  source          = "./modules/efs"
+  source          = "../modules/efs"
   efs_performance = var.efs_performance
   efs_subnets     = module.networking.data_subnets
   efs_sgs         = [module.networking.efs_sg]
 }
 
-##########################################
-# Configure an Application Load Balancer
-##########################################
-
 module "alb" {
-  source = "./modules/alb"
+  source = "../modules/alb"
 
   alb_sgs     = [module.networking.alb_sg]
   alb_subnets = module.networking.dmz_subnets
   vpc_id      = module.networking.vpc
 }
 
-##############################
-# Specify User Data templates
-##############################
+# Specify user_data templates
 
 data "template_file" "bastion_template" {
   template = file("bastion_user_data.tpl")
 }
 
 data "template_file" "web_template" {
-  template = file("web_user_data_docker.tpl")
+  template = file("web_user_data.tpl")
 
   vars = {
     fs_path             = module.dns.fs_fqdn
@@ -100,12 +79,8 @@ data "template_file" "web_template" {
   }
 }
 
-##########################
-# Configure EC2 instances
-##########################
-
 module "compute" {
-  source = "./modules/compute"
+  source = "../modules/compute"
 
   ec2_key_path = var.ec2_key_path
 
@@ -116,7 +91,6 @@ module "compute" {
 
   web_instances_min = var.web_instances_min
   web_instances_max = var.web_instances_max
-  web_instances_desired = var.web_instances_desired
   web_sgs           = [module.networking.web_sg]
   web_user_data     = data.template_file.web_template.rendered
   web_asg_subnets   = module.networking.app_subnets
@@ -124,12 +98,8 @@ module "compute" {
   alb_tgs           = [module.alb.alb_tg]
 }
 
-#################################
-# Configure Route53 Hosted Zones
-#################################
-
 module "dns" {
-  source = "./modules/dns"
+  source = "../modules/dns"
 
   public_domain_name = var.public_domain_name
   alb_dns_name       = module.alb.alb_dns_name

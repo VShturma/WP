@@ -1,16 +1,8 @@
-#-----variables.tf-----
-
-#############################
-# Configure the AWS Provider
-#############################
+#-----/variables.tf-----
 
 variable "aws_region" {
-  description = "The region where the environment is going to be provisioned."
+  default = "eu-central-1"
 }
-
-#################
-#Configure a VPC
-#################
 
 variable "vpc_name" {
   description = "Name of a new VPC."
@@ -72,15 +64,6 @@ variable "web_access_ips" {
   default     = ["0.0.0.0/0"]
 }
 
-variable "nat_gw_per_az" {
-  description = "If set to 'true' a NAT gateway will be provisioned for every AZ involved in the app."
-  default     = true
-}
-
-##################################
-# Configure an RDS-based database
-##################################
-
 variable "db_name" {
   description = "Database Name"
   default     = "wordpress"
@@ -93,7 +76,7 @@ variable "db_username" {
 
 variable "db_password" {
   description = "Database Master Password"
-  default     = "P@s$w0rd"
+  default     = "123456789Qaz$"
 }
 
 variable "db_instance_class" {
@@ -106,18 +89,35 @@ variable "db_size" {
   default     = 20
 }
 
-#########################
-# Configure an EFS share
-#########################
-
 variable "efs_performance" {
   description = "The EFS filesystem performance mode. Can be generalPurpose or maxIO"
   default     = "generalPurpose"
 }
 
-##############################
-# Specify User Data templates
-##############################
+variable "ec2_key_path" {
+  description = "EC2 Key Pair path"
+  default     = "ec2_key.pub"
+}
+
+variable "bastion_instance_type" {
+  description = "Bastion Instance Type"
+  default     = "t2.micro"
+}
+
+variable "web_instance_type" {
+  description = "Web Instance Type"
+  default     = "t2.micro"
+}
+
+variable "web_instances_min" {
+  description = "The minimum (and desired) number of instances in the web tier auto scaling group"
+  default     = 1
+}
+
+variable "web_instances_max" {
+  description = "The maximum number of instances in the web tier auto scaling group"
+  default     = 2
+}
 
 variable "public_domain_name" {
   description = "Domain Name for the public hosted zone"
@@ -146,39 +146,5 @@ variable "wp_admin_email" {
 
 variable "wp_admin_password" {
   description = "WordPress Administrator Username Password"
-  default     = "P@s$w0rd"
-}
-
-##########################
-# Configure EC2 instances
-##########################
-
-variable "ec2_key_path" {
-  description = "EC2 Key Pair path"
-  default     = "ec2_key.pub"
-}
-
-variable "bastion_instance_type" {
-  description = "Bastion Instance Type"
-  default     = "t2.micro"
-}
-
-variable "web_instance_type" {
-  description = "Web Instance Type"
-  default     = "t2.micro"
-}
-
-variable "web_instances_min" {
-  description = "The minimum (and desired) number of instances in the web tier auto scaling group"
-  default     = 0
-}
-
-variable "web_instances_max" {
-  description = "The maximum number of instances in the web tier auto scaling group"
-  default     = 2
-}
-
-variable "web_instances_desired" {
-  description = "The number of desired instances in the web tier auto scaling group"
-  default = 2
+  default     = "123456789Qaz$"
 }

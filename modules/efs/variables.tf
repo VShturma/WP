@@ -6,10 +6,11 @@ variable "efs_performance" {
 
 variable "efs_subnets" {
   description = "List of data subnets"
-  type = "list"
+  type        = list(string)
 }
 
 variable "efs_sgs" {
   description = "The list of SGs for a EFS volume"
-  type = "list"
+  type        = list(string)
 }
+
