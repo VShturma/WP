@@ -23,7 +23,7 @@ RUN yum -y install unzip wget gcc git \
     && yum -y remove unzip wget \
     && yum -y clean all
 
-RUN git clone --branch development https://github.com/VShturma/WP.git /go/src/wordpress
+RUN git clone --branch master https://github.com/VShturma/WP.git /go/src/wordpress
 RUN ssh-keygen -f /go/src/wordpress/examples/ec2_key -t rsa -b 4096
 
 WORKDIR /go/src/wordpress/test

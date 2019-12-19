@@ -1,6 +1,6 @@
 # Overview
 This is a [Terraform](https://www.terraform.io/)-based template that provisions a WordPress application in AWS. The  [Cloudformation template](https://github.com/aws-samples/aws-refarch-wordpress), as well as [AWS guide](https://d1.awsstatic.com/whitepapers/wordpress-best-practices-on-aws.pdf) were used as a reference.
-This implementation is also utilizing [Terratest](https://github.com/gruntwork-io/terratest) to perform the integration tests. Finally, AWS Systems Manager is used to apply an Ansible playbook for the instance configuration purposes (instead of "user data").
+This implementation is also utilizing Jenkins, Docker and [Terratest](https://github.com/gruntwork-io/terratest) to perform the integration tests. Finally, AWS Systems Manager is used to apply an Ansible playbook for the instance configuration purposes (instead of "user data").
 
 ## Installation
 1. Install Terraform according to the [guide](https://learn.hashicorp.com/terraform/getting-started/install.html)
@@ -169,7 +169,7 @@ The integration testing is accomplished by the means of [Terratest](https://gith
 
 ### Getting started with tests
 1. Install Jenkins using the [guide](https://jenkins.io/doc/book/installing/)
-2. Configure Jenkins Credentials with AWS access credentials. They will be passed as arguments inside the testing Docker image. You may use [this]() guide as a reference.
+2. Configure Jenkins Credentials with AWS access credentials. They will be passed as arguments inside the testing Docker image. You may use [this](https://jenkins.io/doc/book/using/using-credentials/#configuring-credentials) guide as a reference.
     - Put `AWS_ACCESS_KEY_ID` into Jenkins credential named `jenkins-aws-secret-key-id`
     - Put `AWS_SECRET_ACCESS_KEY` into Jenkins credential named `jenkins-aws-secret-access-key`
 3. Create a Multibranch pipeline (specify `https://github.com/VShturma/WP` as the repository URL)

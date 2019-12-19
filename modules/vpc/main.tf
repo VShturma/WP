@@ -90,7 +90,7 @@ resource "aws_nat_gateway" "ngw" {
 
   allocation_id = element(aws_eip.nat.*.id, count.index)
   subnet_id     = aws_subnet.dmz[count.index].id
-  depends_on    = ["aws_internet_gateway.igw"]
+  depends_on    = [aws_internet_gateway.igw]
 
   tags = {
     Name = "NGW${count.index + 1}"
