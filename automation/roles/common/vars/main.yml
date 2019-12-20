@@ -1,0 +1,5 @@
+---
+packages:
+  - mariadb
+  - amazon-efs-utils
+  - python-pip

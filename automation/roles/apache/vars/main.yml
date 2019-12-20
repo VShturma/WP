@@ -1,0 +1,5 @@
+---
+packages:
+  - httpd
+
+php_version: "{{ lookup('aws_ssm', 'php_version', region=vars['default_region']) }}"

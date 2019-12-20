@@ -1,0 +1,13 @@
+---
+wp_path: "{{ lookup('aws_ssm', 'wp_path', region=vars['default_region']) }}"
+fs_path: "{{ lookup('aws_ssm', 'fs_path', region=vars['default_region']) }}"
+wp_db_name: "{{ lookup('aws_ssm', 'wp_db_name', region=vars['default_region']) }}"
+wp_db_username: "{{ lookup('aws_ssm', 'wp_db_username', region=vars['default_region']) }}"
+mysql_root_password: "{{ lookup('aws_ssm', 'mysql_root_password', region=vars['default_region']) }}"
+mysql_host: "{{ lookup('aws_ssm', 'mysql_host', region=vars['default_region']) }}"
+wp_domain: "{{ lookup('aws_ssm', 'wp_domain', region=vars['default_region']) }}"
+wp_title: "{{ lookup('aws_ssm', 'wp_title', region=vars['default_region']) }}"
+wp_admin_username: "{{ lookup('aws_ssm', 'wp_admin_username', region=vars['default_region']) }}"
+wp_admin_password: "{{ lookup('aws_ssm', 'wp_admin_password', region=vars['default_region']) }}"
+wp_admin_email: "{{ lookup('aws_ssm', 'wp_admin_email', region=vars['default_region']) }}"
+www_path: "{{ lookup('aws_ssm', 'www_path', region=vars['default_region']) }}"

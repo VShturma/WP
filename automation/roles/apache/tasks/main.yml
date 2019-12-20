@@ -1,0 +1,14 @@
+---
+- name: Install Apache 
+  yum:
+    name: "{{ packages }}"
+    state: latest
+
+- name: Install PHP from Amazon repos
+  command: amazon-linux-extras install -y php{{ php_version }}
+
+- name: Enable Apache service
+  systemd:
+    name: httpd
+    enabled: yes
+    state: started  

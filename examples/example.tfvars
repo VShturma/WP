@@ -1,0 +1,7 @@
+aws_region    = "us-east-1"
+db_name        = "wordpress"
+db_username    = "root"
+db_password    = "P@s$w0rd"
+wp_admin_username = "Admin"
+wp_admin_email    = "test@gmail.com"
+wp_admin_password = "P@s$w0rd"
