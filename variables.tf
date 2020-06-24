@@ -179,7 +179,7 @@ variable "repo_path" {
 
 variable "repo_branch" {
   description = "Specify the repository branch"
-  default     = "branch:development"
+  default     = "branch:master"
 }
 
 variable "playbook_file" {
